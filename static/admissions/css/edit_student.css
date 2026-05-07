@@ -1,18 +1,15 @@
 body{
     position: relative;
     top: 70px;
-    background-color: whitesmoke;
-    
 }
 
 .container {
-    width: 100%;
-    max-width: 1000px;
+    width: 95%;
+    max-width: 1200px;
     margin: 70px auto 20px;
     background: #f5f7fb;
     padding: 20px;
     border-radius: 10px;
-    align-content: center;
 }
 
 .section-title,
@@ -52,7 +49,7 @@ label {
 input,
 select,
 textarea {
-    width: 90%;
+    width: 100%;
     padding: 8px;
     height: 40px;
     border: 1px solid #d1d5db;
