@@ -109,8 +109,7 @@
                     <select name="course" id="id_course">
                         <option value="">Select Course</option>
                         {% for c in courses %}
-                        <option value="{{ c.id }}" {% if request.POST.course == c.id|stringformat:"s" %}selected{% endif
-                            %} data-duration="{{ c.duration }}" data-fee="{{ c.course_fee }}">
+                        <option value="{{ c.id }}" {% if request.POST.course == c.id|stringformat:"s" %}selected{% endif %} data-duration="{{ c.duration }}" data-fee="{{ c.course_fee }}">
                             {{ c.course }}
                         </option>
                         {% endfor %}
@@ -161,8 +160,7 @@
             <div class="admission-status">
                 {% for value, label in admission_form.fields.status.choices %}
                 <label class="status-option">
-                    <input type="radio" name="status" value="{{ value }}" {% if admission_form.status.value==value
-                        %}checked{% endif %}>
+                    <input type="radio" name="status" value="{{ value }}" {% if admission_form.status.value == value %}checked{% endif %}>
                     <span class="status {{ value }}">{{ label }}</span>
                 </label>
                 {% endfor %}
