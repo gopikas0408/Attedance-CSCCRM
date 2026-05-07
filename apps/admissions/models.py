@@ -26,6 +26,7 @@ class Student(models.Model):
     phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator])
 
     gender_choice = [
+        ('', 'Select Gender'),
         ('M','Male'),
         ('F','Female'),
         ('O','Others')
@@ -79,6 +80,7 @@ class Enrollment(models.Model):
     admission = models.OneToOneField(Admission, on_delete=models.CASCADE, related_name='enrollment')
 
     batch = models.CharField(max_length=10, choices=[
+        ('', 'Select Batch'),
         ('Batch A','Batch A'),
         ('Batch B','Batch B'),
         ('Batch C','Batch C')
