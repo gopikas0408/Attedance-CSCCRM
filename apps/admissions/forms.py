@@ -17,8 +17,8 @@ def validate_image(file):
 
 def validate_document(file):
     ext = os.path.splitext(file.name)[1].lower()
-    if ext != '.pdf':
-        raise ValidationError("Only PDF allowed")
+    if ext not in ['.pdf', '.doc', '.docx']:
+        raise ValidationError("Only PDF, DOC, and DOCX files allowed")
 
     if file.size > 5 * 1024 * 1024:
         raise ValidationError("File must be under 5MB")
@@ -39,8 +39,8 @@ class StudentForm(forms.ModelForm):
             'guardian_phone_no': forms.TextInput(attrs={'placeholder': 'Enter guardian phone', 'required': True}),
             'address': forms.Textarea(attrs={'placeholder': 'Enter address', 'rows': 2, 'cols': 30, 'style': 'font-size:14px; padding:5px;', 'required': True}),
             'photo': forms.FileInput(attrs={'required': True, 'accept': '.jpg,.jpeg,.png'}),
-            'id_proof': forms.FileInput(attrs={'required': True, 'accept': '.pdf'}),
-            'certificate': forms.FileInput(attrs={'required': True, 'accept': '.pdf'}),
+            'id_proof': forms.FileInput(attrs={'required': True, 'accept': '.pdf,doc,.docx'}),
+            'certificate': forms.FileInput(attrs={'required': True, 'accept': '.pdf,doc,.docx'}),
 
         }
     
