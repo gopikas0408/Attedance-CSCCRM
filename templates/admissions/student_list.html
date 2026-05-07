@@ -16,7 +16,8 @@
     <!-- FILTER FORM -->
     <form method="GET" class="top-bar">
 
-        <input type="text" name="search" pattern="^[A-Za-z ]+$" value="{{ request.GET.search }}" placeholder="Search name">
+        <input type="text" name="search" pattern="^[A-Za-z ]+$" value="{{ request.GET.search }}"
+            placeholder="Search name">
 
         <input type="text" name="id" pattern="^\d{1,5}$" value="{{ request.GET.id }}" placeholder="Search ID">
 
@@ -50,12 +51,21 @@
     <div class="table-container">
         <form method="GET">
             <div id="btn1">
-                <select name="format">
-                    <option value="">Select format</option>
-                    <option value="excel">Download Excel</option>
-                    <option value="pdf">Download PDF</option>
-                </select>
-                <button type="submit" id="btn2">Download</button>
+
+                <div class="format-box">
+                    <select name="format" id="format">
+                        <option value="">Select format</option>
+                        <option value="excel">Download Excel</option>
+                        <option value="pdf">Download PDF</option>
+                    </select>
+
+                    <p id="error-msg"></p>
+                </div>
+
+                <button type="submit" id="btn2" onclick="return validateFormat()">
+                    Download
+                </button>
+
             </div>
 
         </form>
@@ -197,20 +207,38 @@
     }
 </script>
 
-<script>
-function toggleDropdown(button) {
-    let dropdown = button.nextElementSibling;
-    dropdown.classList.toggle("show");
-}
+<!-- ACTION -->
 
-// optional: outside click close
-document.addEventListener("click", function(e) {
-    if (!e.target.matches('.dots')) {
-        document.querySelectorAll(".dropdown-content").forEach(d => {
-            d.classList.remove("show");
-        });
+<script>
+    function toggleDropdown(button) {
+        let dropdown = button.nextElementSibling;
+        dropdown.classList.toggle("show");
     }
-});
+
+    // optional: outside click close
+    document.addEventListener("click", function (e) {
+        if (!e.target.matches('.dots')) {
+            document.querySelectorAll(".dropdown-content").forEach(d => {
+                d.classList.remove("show");
+            });
+        }
+    });
+</script>
+
+<script>
+function validateFormat() {
+
+    let format = document.getElementById("format").value;
+    let error = document.getElementById("error-msg");
+
+    if (format === "") {
+        error.innerText = "Please select one format";
+        return false;
+    }
+
+    error.innerText = "";
+    return true;
+}
 </script>
 
 {% endblock %}

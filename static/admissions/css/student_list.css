@@ -204,6 +204,24 @@ th,td {
     background-color: #2563eb;
     color: white;
 }
+
+#btn1{
+    display: flex;
+    align-items: start;
+    gap: 10px;
+}
+
+.format-box{
+    display: flex;
+    flex-direction: column;
+}
+
+#error-msg{
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
 @media(max-width: 550px) {
     body {
         background-color: white;
