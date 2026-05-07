@@ -76,6 +76,17 @@ button:hover{
     background-color: gray;
     position: relative;
     top: 15px;
+    left: 35px;
+}
+
+.user-left{
+    position: relative;
+    left: 20px;
+}
+
+.user-middle{
+    position: relative;
+    left: 60px;
 }
 
 .user-right{
@@ -239,14 +250,115 @@ a{
     position: relative;
     top: 5px;
 }
-@media(max-width:550px){
-    h2{
+@media (max-width: 550px) {
+
+    body {
+        top: 60px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    /* USER CARD */
+    .user-card {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .user {
+        text-align: center;
+    }
+
+    .user img {
+        width: 140px !important;
+        height: 140px !important;
+    }
+
+    .line {
+        display: none;
+    }
+
+    .user-left{
+        position: relative;
+        left: 0;
+    }
+
+    .user-middle{
+        position: relative;
+        left: 0;
+    }
+
+    .user-left,
+    .user-middle,
+    .user-right {
+        width: 100%;
+    }
+
+    .user-right {
+        margin-right: 0;
+        left: 0;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    /* STATS */
+    .stats {
+        flex-direction: column;
+    }
+
+    .box {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .text{
+        position: relative;
+        left: 60px;
+    }
+    
+
+    .text span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+    /* PAYMENT TABLE */
+    .card {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    /* NOTES + DOCS */
+    .bottom {
+        flex-direction: column;
+    }
+
+    .doc-list {
+        flex-direction: column;
+    }
+
+    .proof {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* TEXT */
+    h3 {
         font-size: 18px;
     }
-    body{
-        position: relative;
-        top: 50px;
 
+    p,
+    td,
+    th,
+    a,
+    span {
+        font-size: 14px;
     }
-
+    img {
+    max-width: 100%;
+    height: auto;
+    }
 }

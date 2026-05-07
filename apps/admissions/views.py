@@ -136,23 +136,78 @@ def student_list(request):
         'total_students': filtered_students.count()
     })
 
+from django.shortcuts import render, redirect, get_object_or_404
+
 def edit_student(request, id):
-    student = Student.objects.get(id=id)
+
+    student = get_object_or_404(Student, id=id)
+
+    admission = Admission.objects.get(student=student)
+
+    enrollment = Enrollment.objects.get(admission=admission)
+
+    courses = Course.objects.all()
 
     if request.method == 'POST':
+
+        # ================= PERSONAL INFO =================
+
         student.First_name = request.POST.get('First_name')
         student.Last_name = request.POST.get('Last_name')
-        student.phone_no = request.POST.get('phone_no')
         student.email = request.POST.get('email')
+        student.phone_no = request.POST.get('phone_no')
         student.dob = request.POST.get('dob')
+        student.gender = request.POST.get('gender')
+        student.guardian_name = request.POST.get('guardian_name')
+        student.guardian_phone_no = request.POST.get('guardian_phone_no')
         student.address = request.POST.get('address')
 
+        # ================= FILES =================
+
+        if request.FILES.get('photo'):
+            student.photo = request.FILES.get('photo')
+
+        if request.FILES.get('id_proof'):
+            student.id_proof = request.FILES.get('id_proof')
+
+        if request.FILES.get('certificate'):
+            student.certificate = request.FILES.get('certificate')
+
         student.save()
+
+        # ================= ADMISSION =================
+
+        course_id = request.POST.get('course')
+
+        if course_id:
+            admission.course_id = course_id
+
+        admission.status = request.POST.get('status')
+
+        admission.save()
+
+        # ================= ENROLLMENT =================
+
+        batch_id = request.POST.get('batch')
+
+        if batch_id:
+            enrollment.batch_id = batch_id
+
+        enrollment.start_date = request.POST.get('start_date')
+        enrollment.payment_status = request.POST.get('payment_status')
+
+        enrollment.save()
+
         return redirect('student_list')
 
-    return render(request, "admissions/edit_student.html", {'student': student})
+    context = {
+        'student': student,
+        'admission': admission,
+        'enrollment': enrollment,
+        'courses': courses
+    }
 
-        
+    return render(request, "admissions/edit_student.html", context)
 
 def delete_student(request, id):
     student=Student.objects.get(id=id)

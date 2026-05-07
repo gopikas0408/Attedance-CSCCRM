@@ -8,14 +8,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'admissions/css/register.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-.error {
-    color: #dc2626;
-    font-size: 12px;
-    display: block;
-    margin-top: 4px;
-}
-</style>
+
 {% endblock %}
 
 {% block content %}
@@ -184,10 +177,26 @@ data-fee="{{ c.course_fee }}">
 <label>📷 Student Photo</label>
 <label>📄 ID Proof</label>
 <label>📜 Certificate</label>
+<div>
+    {{ student_form.photo }}
+    {% if student_form.photo.errors %}
+        <span class="error">{{ student_form.photo.errors.0 }}</span>
+    {% endif %}
+</div>
 
-{{ student_form.photo }}
-{{ student_form.id_proof }}
-{{ student_form.certificate }}
+<div>
+    {{ student_form.id_proof }}
+    {% if student_form.id_proof.errors %}
+        <span class="error">{{ student_form.id_proof.errors.0 }}</span>
+    {% endif %}
+</div>
+
+<div>
+    {{ student_form.certificate }}
+    {% if student_form.certificate.errors %}
+        <span class="error">{{ student_form.certificate.errors.0 }}</span>
+    {% endif %}
+</div>
 </div>
 </div>
 

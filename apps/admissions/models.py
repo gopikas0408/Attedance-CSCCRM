@@ -30,7 +30,7 @@ class Student(models.Model):
         ('F','Female'),
         ('O','Others')
     ]
-    gender = models.CharField(max_length=3, choices=gender_choice)
+    gender = models.CharField(max_length=10, choices=gender_choice)
 
     email = models.EmailField(validators=[email_validator])
     address = models.TextField()

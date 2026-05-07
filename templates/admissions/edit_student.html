@@ -1,5 +1,6 @@
 {% extends 'admissions/base.html' %}
 {% load static %}
+
 {% block title %}
 <title>Edit Student</title>
 {% endblock title %}
@@ -8,30 +9,259 @@
 <link rel="stylesheet" type="text/css" href="{% static 'admissions/css/edit_student.css' %}">
 {% endblock %}
 
-
 {% block content %}
 
-<h1>Edit Student</h1>
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
 
-<form method="POST">
-    {% csrf_token %}
+<!-- PERSONAL INFO -->
+<div class="personal-info">
 
-    <label>Name: </label>
-    <input type="text" name="First_name" value="{{ student.First_name }}" >
-    <input type="text" name="Last_name" value="{{ student.Last_name }}"><br><br>
+<h3 class="section-title">
+<i class="fas fa-user"></i> Personal Information
+</h3>
 
-    <label>Mobile No:</label>
-    <input type="text" name="phone_no" value="{{ student.phone_no }}" required><br><br>
+<div class="personal-grid">
 
-    <label>Email:</label>
-    <input type="email" name="email" value="{{ student.email }}" required><br><br>
+<div>
+<label>First Name</label>
+<input type="text" name="First_name"
+value="{{ student.First_name }}" pattern="^[A-Za-z ]+$" title="Only alphabets and spaces are allowed.">
+</div>
 
-    <label>Date of Birth:</label>
-    <input type="date" name="dob" value="{{ student.dob|date:'Y-m-d' }}" required><br><br>
+<div>
+<label>Last Name</label>
+<input type="text" name="Last_name"
+value="{{ student.Last_name }}" pattern="^[A-Za-z ]+$" title="Only alphabets and spaces are allowed.">
+</div>
 
-    <label>Address:</label>
-    <textarea name="address" required>{{ student.address }}</textarea><br><br>
+<div>
+<label>Email</label>
+<input type="email" name="email"
+value="{{ student.email }}" pattern="^[\w\.-]+@[\w\.-]+\.\w+$" title="Enter a proper email (example: name@gmail.com)">
+</div>
 
-    <button type="submit">Update</button>
+<div>
+<label>Phone</label>
+<input type="text" name="phone_no"
+value="{{ student.phone_no }}" pattern="^\d{10}$" title="Phone number must be exactly 10 digits.">
+</div>
+
+<div>
+<label>Date of Birth</label>
+<input type="date" name="dob"
+value="{{ student.dob|date:'Y-m-d' }}">
+</div>
+
+<div>
+<label>Gender</label>
+<select name="gender">
+
+<option value="M"
+{% if student.gender == "M" %}selected{% endif %}>
+Male
+</option>
+
+<option value="F"
+{% if student.gender == "F" %}selected{% endif %}>
+Female
+</option>
+
+<option value="O"
+{% if student.gender == "O" %}selected{% endif %}>
+Others
+</option>
+
+</select>
+</div>
+
+<div>
+<label>Guardian Name</label>
+<input type="text" name="guardian_name"
+value="{{ student.guardian_name }}" pattern="^[A-Za-z ]+$" title="Only alphabets and spaces are allowed.">
+</div>
+
+<div>
+<label>Guardian Phone</label>
+<input type="text" name="guardian_phone_no"
+value="{{ student.guardian_phone_no }}" pattern="^\d{10}$" title="Phone number must be exactly 10 digits.">
+</div>
+
+</div>
+
+<div class="address-grid">
+<label>Address</label>
+
+<textarea name="address">{{ student.address }}</textarea>
+</div>
+
+</div>
+
+<!-- COURSE -->
+<div class="personal-info">
+
+<h3 class="section-title">
+<i class="fas fa-book"></i> Course Enrollment
+</h3>
+
+<div class="course-grid">
+
+<div>
+<select name="course" id="id_course">
+
+<option value="">Select Course</option>
+
+{% for c in courses %}
+<option value="{{ c.id }}"
+{% if admission.course.id == c.id %}selected{% endif %}
+data-duration="{{ c.duration }}"
+data-fee="{{ c.course_fee }}">
+
+{{ c.course }}
+
+</option>
+{% endfor %}
+
+</select>
+</div>
+
+<select name="batch">
+
+<option value="Batch A"
+{% if enrollment.batch == "Batch A" %}selected{% endif %}>
+Batch A
+</option>
+
+<option value="Batch B"
+{% if enrollment.batch == "Batch B" %}selected{% endif %}>
+Batch B
+</option>
+
+<option value="Batch C"
+{% if enrollment.batch == "Batch C" %}selected{% endif %}>
+Batch C
+</option>
+
+</select>
+
+<div>
+<input type="text"
+id="duration"
+value="{{ admission.course.duration }}"
+readonly>
+</div>
+
+<div>
+<input type="date"
+name="start_date"
+value="{{ enrollment.start_date|date:'Y-m-d' }}">
+</div>
+
+<div>
+<input type="text"
+id="fee"
+value="{{ admission.course.course_fee }}"
+readonly>
+</div>
+
+<div>
+<select name="payment_status">
+
+<option value="Paid"
+{% if enrollment.payment_status == "Paid" %}selected{% endif %}>
+Paid
+</option>
+
+<option value="Pending"
+{% if enrollment.payment_status == "Pending" %}selected{% endif %}>
+Pending
+</option>
+
+</select>
+</div>
+
+</div>
+
+<label>Admission Status</label>
+
+<div class="admission-status">
+
+<label class="status-option">
+<input type="radio" name="status" value="enquiry"
+{% if admission.status == "enquiry" %}checked{% endif %}>
+<span class="status enquiry">Enquiry</span>
+</label>
+
+<label class="status-option">
+<input type="radio" name="status" value="confirmed"
+{% if admission.status == "confirmed" %}checked{% endif %}>
+<span class="status confirmed">Confirmed</span>
+</label>
+
+<label class="status-option">
+<input type="radio" name="status" value="enrolled"
+{% if admission.status == "enrolled" %}checked{% endif %}>
+<span class="status enrolled">Enrolled</span>
+</label>
+
+</div>
+
+</div>
+
+<!-- DOCUMENT -->
+<div class="personal-info">
+
+<h3 class="section-title-details">
+<i class="fas fa-file-alt"></i> Document Upload
+</h3>
+
+<div class="document-grid">
+
+<div>
+<label>Student Photo</label>
+<input type="file" name="photo" accept="image/*">
+
+{% if student.photo %}
+<a href="{{ student.photo.url }}" target="_blank" class="file-link">
+    Current: {{ student.photo.name|cut:"student_photos/" }}
+</a>
+{% endif %}
+</div>
+
+<div>
+<label>ID Proof</label>
+<input type="file" name="id_proof" accept="application/pdf">
+
+{% if student.id_proof %}
+<a href="{{ student.id_proof.url }}" target="_blank" class="file-link">
+    Current: {{ student.id_proof.name|cut:"id_proofs/" }}
+</a>
+{% endif %}
+</div>
+
+<div>
+<label>Certificate</label>
+<input type="file" name="certificate" accept="application/pdf">
+
+{% if student.certificate %}
+<a href="{{ student.certificate.url }}" target="_blank" class="file-link">
+    Current: {{ student.certificate.name|cut:"certificates/" }}
+</a>
+{% endif %}
+</div>
+
+</div>
+</div>
+
+<!-- BUTTON -->
+<div class="form-btn">
+
+<button type="submit">
+<i class="fas fa-save"></i>
+Update Student
+</button>
+
+</div>
+
 </form>
 {% endblock content %}

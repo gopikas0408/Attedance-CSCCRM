@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-_eq2(^!gbm^^mq$dm0$pruqr32&&2wjsq6trx()2a5d0fl162l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com']
-#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.onrender.com','127.0.0.1', 'localhost']
+
 
 # Application definition
 
@@ -76,20 +76,21 @@ WSGI_APPLICATION = 'csc_crm.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
+
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
-'''DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'CSC_CRM',
-        'USER' :'postgres',
-        'PASSWORD' :'suba',
-        'HOST' :'localhost',
-        'PORT' :'5432',
-    }
-}'''
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'CSC_CRM',
+#         'USER' :'postgres',
+#         'PASSWORD' :'suba',
+#         'HOST' :'localhost',
+#         'PORT' :'5432',
+#     }
+# }
 
 
 # Password validation

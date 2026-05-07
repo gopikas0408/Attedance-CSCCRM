@@ -1,6 +1,27 @@
+import os
+
 from django import forms
 from .models import *
 from datetime import date
+
+from django.core.exceptions import ValidationError
+
+def validate_image(file):
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in ['.jpg', '.jpeg', '.png']:
+        raise ValidationError("Only JPG, JPEG, PNG allowed")
+
+    if file.size > 2 * 1024 * 1024:
+        raise ValidationError("Image must be under 2MB")
+
+
+def validate_document(file):
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext != '.pdf':
+        raise ValidationError("Only PDF allowed")
+
+    if file.size > 5 * 1024 * 1024:
+        raise ValidationError("File must be under 5MB")
 
 class StudentForm(forms.ModelForm):
 
@@ -17,9 +38,9 @@ class StudentForm(forms.ModelForm):
             'guardian_name': forms.TextInput(attrs={'placeholder': 'Enter guardian name', 'required': True}),
             'guardian_phone_no': forms.TextInput(attrs={'placeholder': 'Enter guardian phone', 'required': True}),
             'address': forms.Textarea(attrs={'placeholder': 'Enter address', 'rows': 2, 'cols': 30, 'style': 'font-size:14px; padding:5px;', 'required': True}),
-            'photo': forms.FileInput(attrs={'required': True}),
-            'id_proof': forms.FileInput(attrs={'required': True}),
-            'certificate': forms.FileInput(attrs={'required': True}),
+            'photo': forms.FileInput(attrs={'required': True, 'accept': '.jpg,.jpeg,.png'}),
+            'id_proof': forms.FileInput(attrs={'required': True, 'accept': '.pdf'}),
+            'certificate': forms.FileInput(attrs={'required': True, 'accept': '.pdf'}),
 
         }
     
@@ -52,6 +73,25 @@ class StudentForm(forms.ModelForm):
             raise forms.ValidationError("Must be 10 digits")
 
         return phone
+    
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        if photo:
+            validate_image(photo)
+        return photo
+    
+    def clean_id_proof(self):
+        file = self.cleaned_data.get('id_proof')
+        if file:
+            validate_document(file)
+        return file
+
+
+    def clean_certificate(self):
+        file = self.cleaned_data.get('certificate')
+        if file:
+            validate_document(file)
+        return file
 
 class CourseForm(forms.ModelForm):
     class Meta:
