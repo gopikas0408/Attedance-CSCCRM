@@ -109,7 +109,7 @@
                     <select name="course" id="id_course">
                         <option value="">Select Course</option>
                         {% for c in courses %}
-                        <option value="{{ c.id }}" {% if request.POST.course==c.id|stringformat:"s" %}selected{% endif
+                        <option value="{{ c.id }}" {% if request.POST.course == c.id|stringformat:"s" %}selected{% endif
                             %} data-duration="{{ c.duration }}" data-fee="{{ c.course_fee }}">
                             {{ c.course }}
                         </option>
