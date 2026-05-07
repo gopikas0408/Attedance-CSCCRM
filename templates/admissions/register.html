@@ -14,215 +14,218 @@
 {% block content %}
 <div class="container">
 
-<form method="POST" action="{% url 'student' %}" enctype="multipart/form-data">
-{% csrf_token %}
+    <form method="POST" action="{% url 'student' %}" enctype="multipart/form-data">
+        {% csrf_token %}
 
-<!-- ================= PERSONAL INFO ================= -->
-<div class="personal-info">
+        <!-- ================= PERSONAL INFO ================= -->
+        <div class="personal-info">
 
-<h3 class="section-title">
-<i class="fas fa-user"></i> Personal Information
-</h3>
+            <h3 class="section-title">
+                <i class="fas fa-user"></i> Personal Information
+            </h3>
 
-<div class="personal-grid">
+            <div class="personal-grid">
 
-<div>
-<label>First Name</label>
-{{ student_form.First_name }}
-{% if student_form.First_name.errors %}
-<span class="error">{{ student_form.First_name.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>First Name</label>
+                    {{ student_form.First_name }}
+                    {% if student_form.First_name.errors %}
+                    <span class="error">{{ student_form.First_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-<label>Last Name</label>
-{{ student_form.Last_name }}
-{% if student_form.Last_name.errors %}
-<span class="error">{{ student_form.Last_name.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Last Name</label>
+                    {{ student_form.Last_name }}
+                    {% if student_form.Last_name.errors %}
+                    <span class="error">{{ student_form.Last_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-<label>Email</label>
-{{ student_form.email }}
-{% if student_form.email.errors %}
-<span class="error">{{ student_form.email.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Email</label>
+                    {{ student_form.email }}
+                    {% if student_form.email.errors %}
+                    <span class="error">{{ student_form.email.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-<label>Phone</label>
-{{ student_form.phone_no }}
-{% if student_form.phone_no.errors %}
-<span class="error">{{ student_form.phone_no.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Phone</label>
+                    {{ student_form.phone_no }}
+                    {% if student_form.phone_no.errors %}
+                    <span class="error">{{ student_form.phone_no.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-<label>Date of Birth</label>
-{{ student_form.dob }}
-</div>
+                <div>
+                    <label>Date of Birth</label>
+                    {{ student_form.dob }}
+                </div>
 
-<div>
-<label>Gender</label>
-{{ student_form.gender }}
-</div>
+                <div>
+                    <label>Gender</label>
+                    {{ student_form.gender }}
+                </div>
 
-<div>
-<label>Guardian Name</label>
-{{ student_form.guardian_name }}
-{% if student_form.guardian_name.errors %}
-<span class="error">{{ student_form.guardian_name.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Guardian Name</label>
+                    {{ student_form.guardian_name }}
+                    {% if student_form.guardian_name.errors %}
+                    <span class="error">{{ student_form.guardian_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-<label>Guardian Phone</label>
-{{ student_form.guardian_phone_no }}
-{% if student_form.guardian_phone_no.errors %}
-<span class="error">{{ student_form.guardian_phone_no.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Guardian Phone</label>
+                    {{ student_form.guardian_phone_no }}
+                    {% if student_form.guardian_phone_no.errors %}
+                    <span class="error">{{ student_form.guardian_phone_no.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
 
-</div>
+            <div class="address-grid">
+                <label>Address</label>
+                {{ student_form.address }}
+                {% if student_form.address.errors %}
+                <span class="error">{{ student_form.address.errors.0 }}</span>
+                {% endif %}
+            </div>
 
-<div class="address-grid">
-<label>Address</label>
-{{ student_form.address }}
-{% if student_form.address.errors %}
-<span class="error">{{ student_form.address.errors.0 }}</span>
-{% endif %}
-</div>
+        </div>
 
-</div>
+        <!-- ================= COURSE ================= -->
+        <div class="personal-info">
 
-<!-- ================= COURSE ================= -->
-<div class="personal-info">
+            <h3 class="section-title">
+                <i class="fas fa-book icon-blue"></i> Course Enrollment
+            </h3>
 
-<h3 class="section-title">
-<i class="fas fa-book icon-blue"></i> Course Enrollment
-</h3>
+            <div class="course-grid">
 
-<div class="course-grid">
+                <div>
+                    <label>Course</label><br>
+                    <select name="course" id="id_course">
+                        <option value="">Select Course</option>
+                        {% for c in courses %}
+                        <option value="{{ c.id }}" {% if request.POST.course==c.id|stringformat:"s" %}selected{% endif
+                            %} data-duration="{{ c.duration }}" data-fee="{{ c.course_fee }}">
+                            {{ c.course }}
+                        </option>
+                        {% endfor %}
+                    </select>
 
-<div>
-<select name="course" id="id_course">
-<option value="">Select Course</option>
-{% for c in courses %}
-<option value="{{ c.id }}"
-{% if request.POST.course == c.id|stringformat:"s" %}selected{% endif %}
-data-duration="{{ c.duration }}"
-data-fee="{{ c.course_fee }}">
-{{ c.course }}
-</option>
-{% endfor %}
-</select>
+                    {% if admission_form.course.errors %}
+                    <span class="error">{{ admission_form.course.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-{% if admission_form.course.errors %}
-<span class="error">{{ admission_form.course.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Batch</label><br>
+                    {{ enrollment_form.batch }}
+                    {% if enrollment_form.batch.errors %}
+                    <span class="error">{{ enrollment_form.batch.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-{{ enrollment_form.batch }}
-{% if enrollment_form.batch.errors %}
-<span class="error">{{ enrollment_form.batch.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Duration</label><br>
+                    <input type="text" id="duration" placeholder="Duration" readonly required>
+                </div>
 
-<div>
-<input type="text" id="duration" placeholder="Duration" readonly required>
-</div>
+                <div>
+                    <label>Start Date</label><br>
+                    {{ enrollment_form.start_date }}
+                    {% if enrollment_form.start_date.errors %}
+                    <span class="error">{{ enrollment_form.start_date.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-{{ enrollment_form.start_date }}
-{% if enrollment_form.start_date.errors %}
-<span class="error">{{ enrollment_form.start_date.errors.0 }}</span>
-{% endif %}
-</div>
+                <div>
+                    <label>Course Fee</label><br>
+                    <input type="text" id="fee" placeholder="Course Fee" readonly required>
+                </div>
 
-<div>
-<input type="text" id="fee" placeholder="Course Fee" readonly required>
-</div>
+                <div>
+                    <label>Payment Status</label><br>
+                    {{ enrollment_form.payment_status }}
+                    {% if enrollment_form.payment_status.errors %}
+                    <span class="error">{{ enrollment_form.payment_status.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-{{ enrollment_form.payment_status }}
-{% if enrollment_form.payment_status.errors %}
-<span class="error">{{ enrollment_form.payment_status.errors.0 }}</span>
-{% endif %}
-</div>
+            </div>
 
-</div>
+            <label>Admission Status</label><br>
+            <div class="admission-status">
+                {% for value, label in admission_form.fields.status.choices %}
+                <label class="status-option">
+                    <input type="radio" name="status" value="{{ value }}" {% if admission_form.status.value==value
+                        %}checked{% endif %}>
+                    <span class="status {{ value }}">{{ label }}</span>
+                </label>
+                {% endfor %}
+            </div>
 
-<label>Admission Status</label><br>
-<div class="admission-status">
-{% for value, label in admission_form.fields.status.choices %}
-<label class="status-option">
-<input type="radio" name="status" value="{{ value }}"
-{% if admission_form.status.value == value %}checked{% endif %}>
-<span class="status {{ value }}">{{ label }}</span>
-</label>
-{% endfor %}
-</div>
+        </div>
 
-</div>
+        <!-- ================= DOCUMENT ================= -->
+        <div class="personal-info">
+            <h3 class="section-title-details">
+                <i class="fas fa-file-alt icon-blue"></i> Document Upload
+            </h3>
 
-<!-- ================= DOCUMENT ================= -->
-<div class="personal-info">
-<h3 class="section-title-details">
-<i class="fas fa-file-alt icon-blue"></i> Document Upload
-</h3>
+            <div class="document-grid">
+                <label>📷 Student Photo</label>
+                <label>📄 ID Proof</label>
+                <label>📜 Certificate</label>
+                <div>
+                    {{ student_form.photo }}
+                    {% if student_form.photo.errors %}
+                    <span class="error">{{ student_form.photo.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div class="document-grid">
-<label>📷 Student Photo</label>
-<label>📄 ID Proof</label>
-<label>📜 Certificate</label>
-<div>
-    {{ student_form.photo }}
-    {% if student_form.photo.errors %}
-        <span class="error">{{ student_form.photo.errors.0 }}</span>
-    {% endif %}
-</div>
+                <div>
+                    {{ student_form.id_proof }}
+                    {% if student_form.id_proof.errors %}
+                    <span class="error">{{ student_form.id_proof.errors.0 }}</span>
+                    {% endif %}
+                </div>
 
-<div>
-    {{ student_form.id_proof }}
-    {% if student_form.id_proof.errors %}
-        <span class="error">{{ student_form.id_proof.errors.0 }}</span>
-    {% endif %}
-</div>
+                <div>
+                    {{ student_form.certificate }}
+                    {% if student_form.certificate.errors %}
+                    <span class="error">{{ student_form.certificate.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-<div>
-    {{ student_form.certificate }}
-    {% if student_form.certificate.errors %}
-        <span class="error">{{ student_form.certificate.errors.0 }}</span>
-    {% endif %}
-</div>
-</div>
-</div>
+        <!-- ================= BUTTON ================= -->
+        <div class="form-btn">
+            <a href="{% url 'student' %}" class="link">Clear Form</a>
+            <button type="submit">
+                <i class="fas fa-check"></i> Save & Generate ID
+            </button>
+        </div>
 
-<!-- ================= BUTTON ================= -->
-<div class="form-btn">
-<a href="{% url 'student' %}" class="link">Clear Form</a>
-<button type="submit">
-<i class="fas fa-check"></i> Save & Generate ID
-</button>
-</div>
-
-</form>
+    </form>
 </div>
 
 <!-- ================= SCRIPT ================= -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const courseSelect = document.getElementById("id_course");
+    document.addEventListener("DOMContentLoaded", function () {
+        const courseSelect = document.getElementById("id_course");
 
-    courseSelect.addEventListener("change", function () {
-        const selected = this.options[this.selectedIndex];
+        courseSelect.addEventListener("change", function () {
+            const selected = this.options[this.selectedIndex];
 
-        document.getElementById("duration").value = selected.dataset.duration || "";
-        document.getElementById("fee").value = selected.dataset.fee || "";
+            document.getElementById("duration").value = selected.dataset.duration || "";
+            document.getElementById("fee").value = selected.dataset.fee || "";
+        });
     });
-});
 </script>
 
 {% endblock %}
