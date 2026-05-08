@@ -1,18 +1,38 @@
-body{
+body {
     position: relative;
-    top: 90px;
+    top: 70px;
+    overflow-x: hidden;
 }
 
-.container {
+.list-container {
     width: 90%;
     margin: auto;
 }
 
+/* ========================= FILTER GRID ========================= */
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    align-items: end;
+}
 
+.filter-grid input,
+.filter-grid select {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* ========================= TOP BAR ========================= */
 .top-bar {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 15px;
     margin: 20px 0;
+    flex-wrap: wrap;
 }
 
 input,
@@ -20,10 +40,9 @@ select {
     padding: 8px;
 }
 
-
-
+/* ========================= BUTTONS ========================= */
 button {
-    background: #152347;
+    background: rgb(30, 42, 120);
     color: white;
     padding: 8px 15px;
     border: none;
@@ -31,40 +50,64 @@ button {
     cursor: pointer;
 }
 
-.dropdown-content{
+
+button:hover {
+    background-color: rgb(255, 202, 43);
+    color: rgb(30, 42, 120);
+    box-shadow: 0px 4px 10px rgb(255, 202, 43);
+}
+
+/* search + reset buttons */
+.filter-buttons {
     display: flex;
+    gap: 10px;
 }
 
-#btn1{
+/* ========================= DOWNLOAD SECTION ========================= */
+#btn1 {
     display: flex;
-    align-items: end;
-    justify-content: flex-end;
-    gap: 5px;
-    position: relative;
-    top: 5px;
+    align-items: start;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.btn2{
-    position: relative;
-    bottom: 20px;
+.format-box {
+    display: flex;
+    flex-direction: column;
 }
 
-#filter:hover,
-#btn2:hover{
-    background-color: #FFC107;
-    color: #152347;
-    box-shadow: 0px 4px 10px #FFC107;
+#error-msg {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
 }
 
-a{
-    text-decoration: none;
+/* ========================= TABLE ========================= */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    /* Firefox */
+    scrollbar-width: thin;
 }
 
+/* Chrome / Edge / Brave */
+.table-wrapper::-webkit-scrollbar {
+    height: 2px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #e5e5e5;
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: rgb(255, 202, 43);
+    border-radius: 10px;
+}
 
 table {
     width: 100%;
-    position: relative;
-    top: 20px;
+    min-width: 900px;
     border-collapse: collapse;
     background: white;
 }
@@ -73,16 +116,17 @@ th,
 td {
     padding: 10px;
     text-align: left;
-}
-
-th,td {
     border-bottom: 1px solid #ddd;
+    white-space: nowrap;
 }
 
+/* ========================= BADGES ========================= */
 .badge {
-    padding: 5px 10px;
-    border-radius: 10px;
+    padding: 5px 12px;
+    border-radius: 15px;
     font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
 }
 
 .paid {
@@ -98,14 +142,6 @@ th,td {
 .partial {
     background: #fff3cd;
     color: orange;
-}
-
-.badge {
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: 500;
-    display: inline-block;
 }
 
 .badge.enrolled {
@@ -128,6 +164,7 @@ th,td {
     color: #dc2626;
 }
 
+/* ========================= DROPDOWN ========================= */
 .dropdown {
     position: relative;
 }
@@ -143,10 +180,12 @@ th,td {
 .dropdown-content {
     display: none;
     position: absolute;
+    right: 0;
     background: white;
     min-width: 100px;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
     z-index: 1;
+    border-radius: 6px;
 }
 
 .dropdown-content a {
@@ -156,33 +195,34 @@ th,td {
     color: black;
 }
 
-
-.dropdown-content {
-    display: none;
-}
-
 .dropdown-content.show {
     display: block;
 }
 
+a {
+    text-decoration: none;
+}
+
+/* ========================= PAGINATION ========================= */
 .pagination-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
     padding: 10px 5px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-/* Left text */
 .pagination-info {
     font-size: 14px;
     color: #555;
 }
 
-/* Right buttons */
 .pagination-buttons {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -193,95 +233,141 @@ th,td {
     font-weight: 500;
 }
 
-/* Prev button */
 .btn.prev {
     background-color: #f3f4f6;
     color: #333;
 }
 
-/* Next button */
 .btn.next {
     background-color: #2563eb;
     color: white;
 }
 
-#btn1{
-    display: flex;
-    align-items: start;
-    gap: 10px;
+.btn.next:hover {
+    background-color: rgb(255, 202, 43);
+    color: rgb(30, 42, 120);
 }
 
-.format-box{
-    display: flex;
-    flex-direction: column;
+/* ========================= TABLET VIEW ========================= */
+@media(max-width: 992px) {
+    .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-buttons {
+        grid-column: span 2;
+    }
+
+    .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
-#error-msg{
-    color: red;
-    font-size: 13px;
-    margin-top: 4px;
+@media(max-width: 668px) {
+    .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-buttons {
+        grid-column: span 2;
+    }
+
+    .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
+/* ========================= MOBILE VIEW ========================= */
 @media(max-width: 550px) {
     body {
-        background-color: white;
-        position: relative;
-        top: 50px;
+        top: 60px;
     }
 
-    h1 {
-        font-size: 18px;
+    .list-container {
+        width: 95%;
     }
 
-    .table-container {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-
-    }
-
-    .container2 {
-        width: 100%;
-        padding: 10px;
-    }
-
+    h1,
     h2 {
         font-size: 18px;
-        margin-bottom: 10px;
+    }
+
+    /* single column */
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* buttons below search */
+    .filter-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-buttons button {
+        width: 100%;
+    }
+
+    .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #btn1 {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    #btn2 {
+        position: relative;
+        left: 0;
+    }
+
+    #btn {
+        position: relative;
+        right: 0;
+    }
+
+    #filter {
+        position: relative;
+        right: 0;
+    }
+
+    .btn2 {
+        position: relative;
+        bottom: 0;
+    }
+
+    .format-box {
+        width: 100%;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    select {
+        width: 100%;
     }
 
     table {
-        width: 50%;
-    }
-
-    tbody {
-        display: block;
-        overflow-x: auto;
+        min-width: 800px;
     }
 
     th,
     td {
         padding: 8px;
+        font-size: 13px;
     }
 
-    img {
-        width: 50px;
-        height: 50px;
+    .pagination-container {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    select,
-    option {
-        font-size: 14px;
+    .pagination-buttons {
+        width: 100%;
+        justify-content: space-between;
     }
-
-    .btn1 {
-        position: relative;
-        top: 14px;
-    }
-
-    .btn2 {
-        position: relative;
-        top: 19px;
-    }
-
 }

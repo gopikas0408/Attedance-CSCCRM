@@ -71,6 +71,8 @@
         Showing {{ page_obj.paginator.count }} results matching your filters
     </div>
 
+<div class="table-wrapper">
+
 <table>
 <tr>
     <th>Student</th>
@@ -78,7 +80,7 @@
     <th>Status</th>
     <th>Fee</th>
     <th>Joined</th>
-    <th>Actions</th>
+    <th>Profile</th>
 </tr>
 
 {% for student in page_obj %}
@@ -116,24 +118,8 @@
             </td>
 
             <td>
-               <button onclick="showStudentDetails(
-'{% if student.photo %}{{ student.photo.url }}{% else %}/static/admissions/images/default.png{% endif %}',
-'{{ student.First_name }} {{ student.Last_name }}',
-'{{ student.id }}',
-'{{ admission.course }}',
-'{% if admission.enrollment %}{{ admission.enrollment.batch }}{% else %}N/A{% endif %}',
-'{{ admission.course.duration }}',
-'{% if admission.enrollment %}{{ admission.enrollment.start_date }}{% else %}N/A{% endif %}',
-'{{ student.dob }}',
-'{{ student.gender }}',
-'{{ student.email }}',
-'{{ student.phone_no }}',
-'{{ student.address }}',
-'{{ student.guardian_name }}',
-'{{ student.guardian_phone_no }}'
-)">
-View
-</button>
+               <a href="{% url 'view_student' student.id %}"><button>View</button></a>
+
             </td>
         </tr>
         {% endwith %}
@@ -145,59 +131,8 @@ View
 {% endfor %}
 </table>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-function showStudentDetails(photo, name, id, course, batch, duration, date, dob, gender, email, phone_no, address, guardian_name, guardian_phone_no) {
-    Swal.fire({
-        html: `
-    <div style="text-align:center;">
-        <img src="${photo}" 
-             style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:15px;">
-    </div>
+</div>
 
-    <div style="display:flex; justify-content:center;">
-        <div style="
-            width:80%;
-            background:#f9f9f9;
-            padding:15px 20px;
-            border-radius:10px;
-        ">
-            <div style="
-                display:grid; 
-                grid-template-columns: 160px 1fr; 
-                row-gap:10px; 
-                column-gap:10px;
-                font-size:14px;
-                text-align:left;
-            ">
-                <div style="font-weight:600;">Name</div><div>: ${name}</div>
-                <div style="font-weight:600;">ID</div><div>: ${id}</div>
-                <div style="font-weight:600;">Course</div><div>: ${course}</div>
-                <div style="font-weight:600;">Batch</div><div>: ${batch}</div>
-                <div style="font-weight:600;">Duration</div><div>: ${duration}</div>
-                <div style="font-weight:600;">Enrollment Date</div><div>: ${date}</div>
-                <div style="font-weight:600;">Date of Birth</div><div>: ${dob}</div>
-                <div style="font-weight:600;">Gender</div><div>: ${gender}</div>
-                <div style="font-weight:600;">Email</div><div>: ${email}</div>
-                <div style="font-weight:600;">Contact</div><div>: ${phone_no}</div>
-                <div style="font-weight:600;">Address</div><div>: ${address}</div>
-                <div style="font-weight:600;">Guardian Name</div><div>: ${guardian_name}</div>
-                <div style="font-weight:600;">Guardian Contact</div><div>: ${guardian_phone_no}</div>
-            </div>
-        </div>
-    </div>
-`,
-     
-        width: 600,
-        background: '#ffffff',
-        padding: '20px',
-        confirmButtonText: "Close",
-        confirmButtonColor: "#152347",
-        customClass: {
-            popup: 'custom-swal'
-        }
-    });
-}
-</script>
+
 
 {% endblock %}

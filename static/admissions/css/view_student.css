@@ -1,15 +1,14 @@
+*{
+    margin:0;
+    padding:0;
+}
 body {
     position: relative;
     top: 80px;
 }
 
-.container {
-    width: 90%;
-    margin: auto;
-}
-
 button {
-    background: #152347;
+    background: rgb(30, 42, 120);
     color: white;
     padding: 8px 15px;
     border: none;
@@ -18,9 +17,9 @@ button {
 }
 
 button:hover{
-    background-color: #FFC107;
-    color: #152347;
-    box-shadow: 0px 4px 10px #FFC107;
+    background-color: rgb(255, 202, 43);
+    color: rgb(30, 42, 120);
+    box-shadow: 0px 4px 10px rgb(255, 202, 43);
 }
 
 /* Cards */
@@ -32,15 +31,18 @@ button:hover{
     text-align: left;
 }
 
-/* User Layout */
-.user-card {
-    display: flex;
-    justify-content: space-between;
+.user-card{
+    display:flex;
+    gap:30px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    margin-top: 20px;
 }
+
 .enquiry{
     color:#d97706 ;
     background-color: #fef3c7;
-    font-family:12px ;
+    font-size:12px;
     padding: 3px 10px;
     border-radius: 20px;
 }
@@ -69,33 +71,21 @@ button:hover{
     border-radius: 20px;
 }
 
-
 .line{
-    width: 1px;
-    height: 200px;
-    background-color: gray;
-    position: relative;
-    top: 15px;
-    left: 35px;
+    width:1px;
+    height:200px;
+    background:gray;
 }
-
-.user-left{
-    position: relative;
-    left: 20px;
-}
-
-.user-middle{
-    position: relative;
-    left: 60px;
+.user-left,
+.user-middle,
+.user-right{
+    flex:1;
 }
 
 .user-right{
-    width: 200px;
-    border: 1px solid gray;
-    padding: 0 20px;
-    margin-right:200px ;
-    position: relative;
-    left: 200px;
+    border:1px solid gray;
+    padding:15px;
+    border-radius:10px;
 }
 
 .user-left,
@@ -123,9 +113,7 @@ button:hover{
     font-weight: bold;
 }
 .text{
-    position: relative;
-    top: 10px;
-    left: 20px;
+    margin-left: 20px;
 }
 
 .total { background: #eef; color:#152347; }
@@ -141,7 +129,6 @@ button:hover{
     width: 50px;
     height: 50px;
     font-size:25px ;
-    position: relative;
     background: rgb(189, 189, 218);
     border-radius: 50%;
     align-content: center;
@@ -150,7 +137,6 @@ button:hover{
     width: 50px;
     height: 50px;
     font-size:25px ;
-    position: relative;
     background: #b8d8c4;
     border-radius: 50%;
     align-content: center;
@@ -159,7 +145,6 @@ button:hover{
     width: 50px;
     height: 50px;
     font-size:25px ;
-    position: relative;
     background: #dab8b8;
     border-radius: 50%;
     align-content: center;
@@ -168,13 +153,10 @@ button:hover{
     width: 50px;
     height: 50px;
     font-size:25px ;
-    position: relative;
     background: #b0bcd6;
     border-radius: 50%;
     align-content: center;
 }
-
-
 
 /* Table */
 table {
@@ -206,8 +188,6 @@ th, td {
     padding: 10px;
     background: #fff7d6;
     border-radius: 10px;
-    position: relative;
-    bottom: 17px;
 }
 
 
@@ -221,6 +201,7 @@ th, td {
 .doc-list {
     display: flex;
     gap: 10px;
+    margin-top: 20px;
 }
 
 .docs i{
@@ -348,6 +329,14 @@ a{
     /* TEXT */
     h3 {
         font-size: 18px;
+    }
+
+    .notes{
+        padding: 10px 10px;
+    }
+
+    .docs{
+        padding: 10px 10px;
     }
 
     p,

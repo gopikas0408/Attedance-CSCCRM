@@ -1,10 +1,10 @@
-.container {
-    width: 95%;
-    max-width: 1200px;
-    margin: 70px auto 20px auto;  /* center + top space */
+body{
     background: #f5f7fb;
-    padding: 20px;
-    border-radius: 10px;
+}
+.edit-container {
+    width: 95%;
+    margin: 70px auto 20px auto;  /* center + top space */
+
 }
 
 .section-title {
@@ -68,9 +68,11 @@ textarea {
     padding: 20px;
     margin-bottom: 20px;   /* spacing between sections */
     border-radius: 10px;
-    box-shadow: -5px 0 0 0 #d97706;
+    box-shadow: -5px 2px 0 0 rgb(255, 202, 43);
     box-sizing: border-box;
 }
+
+
 
 .personal-grid{
     display: grid;
@@ -133,15 +135,6 @@ textarea {
     margin-top: 25px;
     display: flex;
     justify-content: flex-end;
-}
-
-
-button {
-    background-color: #152347;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
 }
 
 .admission-status {
@@ -224,7 +217,7 @@ a{
 }
 
 button {
-    background: #152347;
+    background: rgb(30, 42, 120);
     color: white;
     padding: 8px 15px;
     border: none;
@@ -233,9 +226,9 @@ button {
 }
 
 button:hover{
-    background-color: #FFC107;
-    color: #152347;
-    box-shadow: 0px 4px 10px #FFC107;
+    background-color: rgb(255, 202, 43);
+    color: rgb(30, 42, 120);
+    box-shadow: 0px 4px 10px rgb(255, 202, 43);
 }
 .error {
     color: #dc2626;
@@ -251,7 +244,7 @@ button:hover{
     }
 
     .container {
-        width: 100%;
+        width: 90%;
         padding: 10px;
         position: relative;
     

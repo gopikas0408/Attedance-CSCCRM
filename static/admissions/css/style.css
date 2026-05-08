@@ -1,94 +1,119 @@
-.navbar {
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* NAVBAR */
+
+.navbar{
+    background-color: rgb(30, 42, 120);
+    color: white;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background:#152347;
-    padding: 10px;
-    color: white;
-}
 
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-    position: relative;
-    bottom: 14px;
-}
+    padding: 15px 30px;
 
-#nav{
-    position: relative;
-    right: 605px;
-    top: 17px;
-}
-
-#home{
-    position: relative;
-    left: 650px;
-    font-size: 25px;
-
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 20px;
-   
-    
-}
-.nav-links li a:hover{
-    color: orange;
-}
-
-.nav-links li a {
-    color: white;
-    text-decoration: none;
-}
-
-.navbar {
     position: fixed;
     top: 0;
     width: 100%;
+
     z-index: 1000;
 }
 
+.logo{
+    font-size: 28px;
+    font-weight: bold;
+    color: rgb(255, 202, 43);
+}
 
-@media (max-width: 550px) {
+/* NAV LINKS */
 
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color:#152347;
-        color: white;
+.nav-links{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    list-style: none;
+}
+
+.nav-links li a{
+    text-decoration: none;
+    color: white;
+    font-size: 17px;
+
+    transition: 0.3s;
+}
+
+.nav-links li a:hover{
+    color: rgb(255, 202, 43);
+}
+
+.fa-house{
+    font-size: 22px;
+}
+
+/* MENU BUTTON */
+
+.menu-toggle{
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: rgb(255, 202, 43);
+}
+
+::-webkit-scrollbar-track{
+    background-color: rgb(30, 42, 120);
+}
+
+/* MOBILE VIEW */
+
+@media (max-width: 768px){
+
+    .menu-toggle{
+        display: block;
     }
 
-    .logo {
-        font-size: 20px;
-    }
-
-    .nav-links {
-        list-style: none;
+    .nav-links{
         display: none;
-        /* hide by default */
+
         flex-direction: column;
-        background-color:#152347;
+
         position: absolute;
-        top: 50px;
+
+        top: 70px;
+        right: 0;
+
+        background-color: rgb(30, 42, 120);
+
+        width: 220px;
+
+        padding: 20px;
+
         text-align: left;
-        right: 05px;
-        width: 140px;
     }
 
-
-    .nav-links a {
-        color: white;
-        text-decoration: none;
+    .nav-links.show{
+        display: flex;
     }
 
-    .menu-toggle {
-        position: relative;
-        right: 20px;
-        font-size: 25px;
-        cursor: pointer;
-        
+    .navbar{
+        padding: 15px 20px;
     }
+
 }

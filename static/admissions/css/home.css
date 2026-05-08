@@ -1,13 +1,14 @@
 body{
     position: relative;
     top: 100px;
+    background-color:white ;
 }
 
 .home-container{
     position: relative; 
     top: 150px;
 }
-h1{
+h3{
     text-align: center;
     color: #333;
 }
@@ -18,18 +19,27 @@ p{
 }
 a{
     text-decoration: none;
-    color: white;
+    color:rgb(30, 42, 120);
+}
+
+a:hover{
+    color: rgb(255, 202, 43);
 }
 button{
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
-    background-color: orangered;
-    color: white;
+    background-color: rgb(255, 202, 43);
+    color: rgb(30, 42, 120);
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+}
+
+button:hover{
+    background-color: rgb(30, 42, 120);
+    color:rgb(255, 202, 43) ;
 }
 
 @media(max-width: 550px) {

@@ -10,8 +10,9 @@
 {% endblock %}
 
 {% block content %}
+<div class="edit-container">
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data" id="studentForm">
     {% csrf_token %}
 
     <!-- PERSONAL INFO -->
@@ -25,36 +26,36 @@
 
             <div>
                 <label>First Name</label>
-                <input type="text" name="First_name" value="{{ student.First_name }}" pattern="^[A-Za-z ]+$"
-                    title="Only alphabets and spaces are allowed.">
+                <input type="text" name="First_name" value="{{ student.First_name }}" pattern="^[A-Za-z ]+$" required >
+                <span class="error" id="firstNameError"></span>
             </div>
 
             <div>
                 <label>Last Name</label>
-                <input type="text" name="Last_name" value="{{ student.Last_name }}" pattern="^[A-Za-z ]+$"
-                    title="Only alphabets and spaces are allowed.">
+                <input type="text" name="Last_name" value="{{ student.Last_name }}" pattern="^[A-Za-z ]+$" required > 
+                <span class="error" id="lastNameError"></span>       
             </div>
 
             <div>
                 <label>Email</label>
-                <input type="email" name="email" value="{{ student.email }}" pattern="^[\w\.-]+@[\w\.-]+\.\w+$"
-                    title="Enter a proper email (example: name@gmail.com)">
+                <input type="email" name="email" value="{{ student.email }}" required pattern="^[\w\.-]+@[\w\.-]+\.\w+$" >  
+                <span class="error" id="emailError"></span>   
             </div>
 
             <div>
                 <label>Phone</label>
-                <input type="text" name="phone_no" value="{{ student.phone_no }}" pattern="^\d{10}$"
-                    title="Phone number must be exactly 10 digits.">
+                <input type="text" name="phone_no" value="{{ student.phone_no }}" maxlength="10" pattern="^\d{10}$"  required>
+                <span class="error" id="phoneError"></span>
             </div>
 
             <div>
                 <label>Date of Birth</label>
-                <input type="date" name="dob" value="{{ student.dob|date:'Y-m-d' }}">
+                <input type="date" name="dob" value="{{ student.dob|date:'Y-m-d' }}" required>
             </div>
 
             <div>
                 <label>Gender</label>
-                <select name="gender">
+                <select name="gender" required>
 
                     <option value="M" {% if student.gender == "M" %}selected{% endif %}>
                         Male
@@ -73,14 +74,14 @@
 
             <div>
                 <label>Guardian Name</label>
-                <input type="text" name="guardian_name" value="{{ student.guardian_name }}" pattern="^[A-Za-z ]+$"
-                    title="Only alphabets and spaces are allowed.">
+                <input type="text" name="guardian_name" value="{{ student.guardian_name }}" pattern="^[A-Za-z ]+$"  required>
+                <span class="error" id="guardianNameError"></span>
             </div>
 
             <div>
                 <label>Guardian Phone</label>
-                <input type="text" name="guardian_phone_no" value="{{ student.guardian_phone_no }}" pattern="^\d{10}$"
-                    title="Phone number must be exactly 10 digits.">
+                <input type="text" name="guardian_phone_no" value="{{ student.guardian_phone_no }}" maxlength="10" pattern="^\d{10}$"  required>
+                <span class="error" id="guardianPhoneError"></span>
             </div>
 
         </div>
@@ -104,7 +105,7 @@
 
             <div>
                 <label>Course</label>
-                <select name="course" id="id_course">
+                <select name="course" id="id_course" required>
 
                     <option value="">Select Course</option>
 
@@ -124,7 +125,7 @@
 
             <label>Batch</label>
 
-            <select name="batch">
+            <select name="batch" required>
 
                 <option value="Batch A" {% if enrollment.batch == "Batch A" %}selected{% endif %}>
                     Batch A
@@ -143,22 +144,22 @@
 
             <div>
                 <label>Duration</label>
-                <input type="text" id="duration" value="{{ admission.course.duration }}" readonly>
+                <input type="text" id="duration" value="{{ admission.course.duration }}" readonly required>
             </div>
 
             <div>
                 <label>Start Date</label>
-                <input type="date" name="start_date" value="{{ enrollment.start_date|date:'Y-m-d' }}">
+                <input type="date" name="start_date" value="{{ enrollment.start_date|date:'Y-m-d' }}" required>
             </div>
 
             <div>
                 <label>Course Fee</label>
-                <input type="text" id="fee" value="{{ admission.course.course_fee }}" readonly>
+                <input type="text" id="fee" value="{{ admission.course.course_fee }}" readonly required>
             </div>
 
             <div>
                 <label>Payment Status</label>
-                <select name="payment_status">
+                <select name="payment_status" required>
 
                     <option value="Paid" {% if enrollment.payment_status == "Paid" %}selected{% endif %}>
                         Paid
@@ -168,7 +169,7 @@
                         Pending
                     </option>
 
-                    <option value="Pending" {% if enrollment.payment_status == "Partial" %}selected{% endif %}>
+                    <option value="Partial" {% if enrollment.payment_status == "Partial" %}selected{% endif %}>
                         Partial
                     </option>
 
@@ -182,12 +183,12 @@
         <div class="admission-status">
 
             <label class="status-option">
-                <input type="radio" name="status" value="enquiry" {% if admission.status == "enquiry" %}checked{% endif %}>
+                <input type="radio" name="status" value="enquiry" {% if admission.status == "enquiry" %}checked{% endif %} required>
                 <span class="status enquiry">Enquiry</span>
             </label>
 
             <label class="status-option">
-                <input type="radio" name="status" value="confirmed" {% if admission.status == "confirmed" %}checked{% endif %}>
+                <input type="radio" name="status" value="confirmed" {% if admission.status == "confirmed" %}checked{% endif %} required>
                 <span class="status confirmed">Confirmed</span>
             </label>
 
@@ -256,4 +257,8 @@
     </div>
 
 </form>
+</div>
+
+
+
 {% endblock content %}
