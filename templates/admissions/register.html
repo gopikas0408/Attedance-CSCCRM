@@ -68,6 +68,9 @@
             <div class="address-grid">
                 <label>Address</label>
                 {{ student_form.address }}
+                {% if student_form.address.errors %}
+                <span class="error">{{ student_form.address.errors.0 }}</span>
+                {% endif %}
             </div>
 
         </div>
@@ -100,6 +103,9 @@
                 <div>
                     <label>Batch</label><br>
                     {{ enrollment_form.batch }}
+                    {% if enrollment_form.batch.errors %}
+                    <span class="error">{{ enrollment_form.batch.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
                 <div>
@@ -110,6 +116,9 @@
                 <div>
                     <label>Start Date</label><br>
                     {{ enrollment_form.start_date }}
+                    {% if enrollment_form.start_date.errors %}
+                    <span class="error">{{ enrollment_form.start_date.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
                 <div>
@@ -120,6 +129,9 @@
                 <div>
                     <label>Payment Status</label><br>
                     {{ enrollment_form.payment_status }}
+                    {% if enrollment_form.payment_status.errors %}
+                    <span class="error">{{ enrollment_form.payment_status.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
             </div>
@@ -180,9 +192,6 @@
     </form>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
 <!-- ================= SCRIPT ================= -->
 <script>
 
@@ -295,4 +304,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
+
+
 {% endblock %}
