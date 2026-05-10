@@ -31,6 +31,11 @@ body{
     font-size: 28px;
     font-weight: bold;
     color: rgb(255, 202, 43);
+    text-decoration: none;
+}
+
+.logo:hover{
+    color:rgb(255, 202, 43) ;
 }
 
 /* NAV LINKS */

@@ -19,7 +19,8 @@
 
     <nav class="navbar">
 
-        <div class="logo">CSC</div>
+        <div class="logo">
+            <a href="{% url 'home' %}" class="logo">CSC</a></div>
 
         <ul class="nav-links" id="navLinks">
 
@@ -62,6 +63,9 @@
         });
 
     </script>
+
+    {% block extra_js %}
+    {% endblock %}
 
 </body>
 

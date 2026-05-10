@@ -9,6 +9,14 @@ body {
     margin: auto;
 }
 
+.table-container {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 /* ========================= FILTER GRID ========================= */
 .filter-grid {
     display: grid;
@@ -61,6 +69,14 @@ button:hover {
 .filter-buttons {
     display: flex;
     gap: 10px;
+}
+
+.filter {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: end;
 }
 
 /* ========================= DOWNLOAD SECTION ========================= */
@@ -317,6 +333,12 @@ a {
     #btn1 {
         width: 100%;
         flex-direction: column;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .table-container {
+        display: block;
     }
 
     #btn2 {
@@ -327,6 +349,7 @@ a {
     #btn {
         position: relative;
         right: 0;
+        justify-content: end;
     }
 
     #filter {
@@ -338,6 +361,12 @@ a {
         position: relative;
         bottom: 0;
     }
+
+    .down {
+        position: fixed;
+        bottom: 15px;
+    }
+
 
     .format-box {
         width: 100%;
@@ -359,6 +388,13 @@ a {
     td {
         padding: 8px;
         font-size: 13px;
+    }
+
+    .btn.prev{
+        margin-left: 330px;
+    }
+    .btn.next {
+        margin-left: 330px;
     }
 
     .pagination-container {

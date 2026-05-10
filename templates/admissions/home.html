@@ -10,6 +10,8 @@
 <div class="home-container">
     <h3>Welcome to the Student Management System</h3>
     <p>Use the navigation menu to manage students.</p>
-    <button><a href="{% url 'student' %}">Add Student</a></button>
+   <a href="{% url 'student' %}"><button>Add Student</button></a>
 </div>
 {% endblock content %}
+{% block extra_js %}
+    {% endblock %}

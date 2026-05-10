@@ -37,18 +37,26 @@
             <option value="Batch C" {% if request.GET.batch == "Batch C" %}selected{% endif %}>Batch C</option>
         </select>
 
+        <div class="filter">
         <a href="{% url 'student_list' %}">
             <button type="button" id="btn2">Reset</button>
         </a>
         <a href="#">
             <button type="submit" id="filter">Search</button>
         </a>
+        </div>
     </form>
 
     Total Students: {{ total_students }}
 
     <!-- DOWNLOAD -->
     <div class="table-container">
+        <div>
+        <a href="{% url 'student' %}">
+            <button id="btn2" class="btn2">+ Add new Student</button>
+        </a>
+        </div>
+        <div>
         <form method="GET">
             <div id="btn1">
 
@@ -62,17 +70,14 @@
                     <p id="error-msg"></p>
                 </div>
 
-                <button type="submit" id="btn2" onclick="return validateFormat()">
+                <button type="submit" id="btn2" class="down" onclick="return validateFormat()">
                     Download
                 </button>
 
             </div>
 
         </form>
-
-        <a href="{% url 'student' %}">
-            <button id="btn2" class="btn2">+ Add new Student</button>
-        </a>
+        </div>
     </div>
 
     <!-- TABLE -->
@@ -179,11 +184,14 @@
         {% endif %}
 
         {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}" class="btn next">Next </a>
+        <a href="?page={{ page_obj.next_page_number }}"  class="btn next">Next </a>
         {% endif %}
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
 
 <!-- DELETE CONFIRM -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

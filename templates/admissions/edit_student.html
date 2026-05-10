@@ -12,7 +12,7 @@
 {% block content %}
 <div class="edit-container">
 
-<form method="POST" enctype="multipart/form-data" id="studentForm">
+<form method="POST" enctype="multipart/form-data" id="studentForm" novalidate>
     {% csrf_token %}
 
     <!-- PERSONAL INFO -->
@@ -26,25 +26,25 @@
 
             <div>
                 <label>First Name</label>
-                <input type="text" name="First_name" value="{{ student.First_name }}" pattern="^[A-Za-z ]+$" required >
+                <input type="text" name="First_name" value="{{ student.First_name }}"  required >
                 <span class="error" id="firstNameError"></span>
             </div>
 
             <div>
                 <label>Last Name</label>
-                <input type="text" name="Last_name" value="{{ student.Last_name }}" pattern="^[A-Za-z ]+$" required > 
+                <input type="text" name="Last_name" value="{{ student.Last_name }}" required > 
                 <span class="error" id="lastNameError"></span>       
             </div>
 
             <div>
                 <label>Email</label>
-                <input type="email" name="email" value="{{ student.email }}" required pattern="^[\w\.-]+@[\w\.-]+\.\w+$" >  
+                <input type="email" name="email" value="{{ student.email }}" required >  
                 <span class="error" id="emailError"></span>   
             </div>
 
             <div>
                 <label>Phone</label>
-                <input type="text" name="phone_no" value="{{ student.phone_no }}" maxlength="10" pattern="^\d{10}$"  required>
+                <input type="text" name="phone_no" value="{{ student.phone_no }}" maxlength="10"   required>
                 <span class="error" id="phoneError"></span>
             </div>
 
@@ -74,13 +74,13 @@
 
             <div>
                 <label>Guardian Name</label>
-                <input type="text" name="guardian_name" value="{{ student.guardian_name }}" pattern="^[A-Za-z ]+$"  required>
+                <input type="text" name="guardian_name" value="{{ student.guardian_name }}"   required>
                 <span class="error" id="guardianNameError"></span>
             </div>
 
             <div>
                 <label>Guardian Phone</label>
-                <input type="text" name="guardian_phone_no" value="{{ student.guardian_phone_no }}" maxlength="10" pattern="^\d{10}$"  required>
+                <input type="text" name="guardian_phone_no" value="{{ student.guardian_phone_no }}" maxlength="10"   required>
                 <span class="error" id="guardianPhoneError"></span>
             </div>
 
@@ -259,6 +259,127 @@
 </form>
 </div>
 
+ {% endblock content %}
 
+{% block extra_js %}
 
-{% endblock content %}
+<script>
+
+document.getElementById("studentForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let isValid = true;
+    let firstInvalidField = null;
+
+    let nameRegex = /^[A-Za-z ]+$/;
+    let emailRegex = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+    let phoneRegex = /^\d{10}$/;
+
+    let firstName = document.getElementsByName("First_name")[0];
+    let lastName = document.getElementsByName("Last_name")[0];
+    let email = document.getElementsByName("email")[0];
+    let phone = document.getElementsByName("phone_no")[0];
+    let guardianName = document.getElementsByName("guardian_name")[0];
+    let guardianPhone = document.getElementsByName("guardian_phone_no")[0];
+
+    // CLEAR ERRORS
+    document.getElementById("firstNameError").innerText = "";
+    document.getElementById("lastNameError").innerText = "";
+    document.getElementById("emailError").innerText = "";
+    document.getElementById("phoneError").innerText = "";
+    document.getElementById("guardianNameError").innerText = "";
+    document.getElementById("guardianPhoneError").innerText = "";
+
+    // FIRST NAME
+    if(!nameRegex.test(firstName.value)){
+
+        document.getElementById("firstNameError").innerText = "Only alphabets allowed";
+
+        isValid = false;
+
+        if(!firstInvalidField){
+            firstInvalidField = firstName;
+        }
+    }
+
+    // LAST NAME
+    if(!nameRegex.test(lastName.value)){
+
+        document.getElementById("lastNameError").innerText = "Only alphabets allowed";
+
+        isValid = false;
+
+        if(!firstInvalidField){
+            firstInvalidField = lastName;
+        }
+    }
+
+    // EMAIL
+    if(!emailRegex.test(email.value)){
+
+        document.getElementById("emailError").innerText = "Invalid email";
+
+        isValid = false;
+
+        if(!firstInvalidField){
+            firstInvalidField = email;
+        }
+    }
+
+    // PHONE
+    if(!phoneRegex.test(phone.value)){
+
+        document.getElementById("phoneError").innerText = "Enter valid 10 digit number";
+
+        isValid = false;
+
+        if(!firstInvalidField){
+            firstInvalidField = phone;
+        }
+    }
+
+    // GUARDIAN NAME
+    if(!nameRegex.test(guardianName.value)){
+
+        document.getElementById("guardianNameError").innerText = "Only alphabets allowed";
+
+        isValid = false;
+
+        if(!firstInvalidField){
+            firstInvalidField = guardianName;
+        }
+    }
+
+    // GUARDIAN PHONE
+    if(!phoneRegex.test(guardianPhone.value)){
+
+        document.getElementById("guardianPhoneError").innerText = "Enter valid 10 digit number";
+
+        isValid = false;
+
+        if(!firstInvalidField){
+            firstInvalidField = guardianPhone;
+        }
+    }
+
+    // SCROLL TO ERROR
+    if(firstInvalidField){
+
+        firstInvalidField.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        firstInvalidField.focus();
+    }
+
+    // SUBMIT
+    if(isValid){
+        this.submit();
+    }
+
+});
+
+</script>
+{% endblock %}

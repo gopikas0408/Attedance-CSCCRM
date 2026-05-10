@@ -3,7 +3,7 @@ body{
 }
 .edit-container {
     width: 95%;
-    margin: 70px auto 20px auto;  /* center + top space */
+    margin: 70px auto 20px auto; 
 
 }
 
@@ -66,7 +66,7 @@ textarea {
     width: 100%;
     background-color: white;
     padding: 20px;
-    margin-bottom: 20px;   /* spacing between sections */
+    margin-bottom: 20px;   
     border-radius: 10px;
     box-shadow: -5px 2px 0 0 rgb(255, 202, 43);
     box-sizing: border-box;

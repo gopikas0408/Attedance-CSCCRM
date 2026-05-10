@@ -1,11 +1,13 @@
-*{
-    margin:0;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
 }
+
 body {
     position: relative;
     top: 80px;
 }
+
 
 button {
     background: rgb(30, 42, 120);
@@ -16,7 +18,7 @@ button {
     cursor: pointer;
 }
 
-button:hover{
+button:hover {
     background-color: rgb(255, 202, 43);
     color: rgb(30, 42, 120);
     box-shadow: 0px 4px 10px rgb(255, 202, 43);
@@ -31,24 +33,24 @@ button:hover{
     text-align: left;
 }
 
-.user-card{
-    display:flex;
-    gap:30px;
-    align-items:flex-start;
-    flex-wrap:wrap;
+.user-card {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
     margin-top: 20px;
 }
 
-.enquiry{
-    color:#d97706 ;
+.enquiry {
+    color: #d97706;
     background-color: #fef3c7;
-    font-size:12px;
+    font-size: 12px;
     padding: 3px 10px;
     border-radius: 20px;
 }
 
 .confirmed {
-    color:#2563eb;
+    color: #2563eb;
     background-color: #dbeafe;
     font-size: 12px;
     padding: 3px 10px;
@@ -71,31 +73,32 @@ button:hover{
     border-radius: 20px;
 }
 
-.line{
-    width:1px;
-    height:200px;
-    background:gray;
-}
-.user-left,
-.user-middle,
-.user-right{
-    flex:1;
-}
-
-.user-right{
-    border:1px solid gray;
-    padding:15px;
-    border-radius:10px;
+.line {
+    width: 1px;
+    height: 200px;
+    background: gray;
 }
 
 .user-left,
 .user-middle,
-.user-right i{
+.user-right {
+    flex: 1;
+}
+
+.user-right {
+    border: 1px solid gray;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.user-left,
+.user-middle,
+.user-right i {
     color: #152347;
 }
 
-.notes i{
-    color:#d97706 ;
+.notes i {
+    color: #d97706;
 }
 
 /* Stats */
@@ -112,47 +115,69 @@ button:hover{
     text-align: center;
     font-weight: bold;
 }
-.text{
+
+.text {
     margin-left: 20px;
 }
 
-.total { background: #eef; color:#152347; }
-.paid { background: #e0f7e9; color: green; }
-.pending { background: #ffe5e5; color: red; }
-.trans { background: #eef3ff;color: #2563eb; }
+.total {
+    background: #eef;
+    color: #152347;
+}
 
-.total,.paid,.pending,.trans{
+.paid {
+    background: #e0f7e9;
+    color: green;
+}
+
+.pending {
+    background: #ffe5e5;
+    color: red;
+}
+
+.trans {
+    background: #eef3ff;
+    color: #2563eb;
+}
+
+.total,
+.paid,
+.pending,
+.trans {
     display: flex;
 }
 
-.fees-icon1{
+.fees-icon1 {
     width: 50px;
     height: 50px;
-    font-size:25px ;
+    font-size: 25px;
     background: rgb(189, 189, 218);
     border-radius: 50%;
     align-content: center;
 }
-.fees-icon2{
+
+.fees-icon2 {
     width: 50px;
     height: 50px;
-    font-size:25px ;
+    font-size: 25px;
     background: #b8d8c4;
     border-radius: 50%;
     align-content: center;
 }
-.fees-icon3{
+
+.fees-icon3 {
     width: 50px;
     height: 50px;
-    font-size:25px ;
+    font-size: 25px;
     background: #dab8b8;
     border-radius: 50%;
     align-content: center;
 }
-.fees-icon4{
+
+.fees-icon4 {
     width: 50px;
     height: 50px;
-    font-size:25px ;
+    font-size: 25px;
     background: #b0bcd6;
     border-radius: 50%;
     align-content: center;
@@ -164,7 +189,8 @@ table {
     border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
@@ -182,9 +208,10 @@ th, td {
 .notes {
     flex: 1;
     border: 1px solid gray;
-    padding: 5px 10px ;
+    padding: 5px 10px;
 }
-.notes-list{
+
+.notes-list {
     padding: 10px;
     background: #fff7d6;
     border-radius: 10px;
@@ -204,37 +231,40 @@ th, td {
     margin-top: 20px;
 }
 
-.docs i{
-    color:#2563eb ;
+.docs i {
+    color: #2563eb;
 }
 
-.doc-list i{
+.doc-list i {
     color: red;
 }
-a{
+
+a {
     text-decoration: none;
     color: black;
 }
 
-.proof{
+.proof {
     display: flex;
     border: 1px solid gray;
     padding: 10px;
     border-radius: 10px;
 }
-.icon{
+
+.icon {
     background-color: #ffe5e5;
 }
 
-.icon i{
-    font-size:25px ;
+.icon i {
+    font-size: 25px;
     position: relative;
     top: 5px;
 }
+
 @media (max-width: 550px) {
 
     body {
-        top: 60px;
+        margin-top: 15px;
     }
 
     .container {
@@ -260,12 +290,12 @@ a{
         display: none;
     }
 
-    .user-left{
+    .user-left {
         position: relative;
         left: 0;
     }
 
-    .user-middle{
+    .user-middle {
         position: relative;
         left: 0;
     }
@@ -292,16 +322,17 @@ a{
         width: 100%;
         box-sizing: border-box;
     }
-    .text{
+
+    .text {
         position: relative;
         left: 60px;
     }
-    
+
 
     .text span {
-    font-size: 14px;
-    font-weight: 600;
-}
+        font-size: 14px;
+        font-weight: 600;
+    }
 
     /* PAYMENT TABLE */
     .card {
@@ -331,12 +362,26 @@ a{
         font-size: 18px;
     }
 
-    .notes{
+    .notes {
         padding: 10px 10px;
     }
 
-    .docs{
+    .docs {
         padding: 10px 10px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+        height: 2px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+        background: #e5e5e5;
+        border-radius: 10px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+        background: rgb(255, 202, 43);
+        border-radius: 10px;
     }
 
     p,
@@ -346,8 +391,9 @@ a{
     span {
         font-size: 14px;
     }
+
     img {
-    max-width: 100%;
-    height: auto;
+        max-width: 100%;
+        height: auto;
     }
 }

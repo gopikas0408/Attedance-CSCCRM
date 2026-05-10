@@ -19,11 +19,6 @@ p{
 }
 a{
     text-decoration: none;
-    color:rgb(30, 42, 120);
-}
-
-a:hover{
-    color: rgb(255, 202, 43);
 }
 button{
     display: block;
@@ -41,7 +36,6 @@ button:hover{
     background-color: rgb(30, 42, 120);
     color:rgb(255, 202, 43) ;
 }
-
 @media(max-width: 550px) {
     body{
         position: relative;
