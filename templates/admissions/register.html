@@ -47,11 +47,17 @@
                 <div>
                     <label>Date of Birth</label>
                     {{ student_form.dob }}
+                    {% if student_form.dob.errors %}
+                    <span class="error">{{ student_form.dob.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
                 <div>
                     <label>Gender</label>
                     {{ student_form.gender }}
+                    {% if student_form.gender.errors %}
+                    <span class="error">{{ student_form.gender.errors.0 }}</span>
+                    {% endif %}
                 </div>
 
                 <div>
@@ -116,9 +122,7 @@
                 <div>
                     <label>Start Date</label><br>
                     {{ enrollment_form.start_date }}
-                    {% if enrollment_form.start_date.errors %}
-                    <span class="error">{{ enrollment_form.start_date.errors.0 }}</span>
-                    {% endif %}
+
                 </div>
 
                 <div>
@@ -195,55 +199,50 @@
 <!-- ================= SCRIPT ================= -->
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    // COURSE AUTO FILL
-    const courseSelect = document.getElementById("id_course");
+        const form = document.getElementById("studentForm");
+        // COURSE AUTO FILL
+        const courseSelect = document.getElementById("id_course");
 
-    courseSelect.addEventListener("change", function () {
+        courseSelect.addEventListener("change", function () {
 
-        const selected = this.options[this.selectedIndex];
+            const selected = this.options[this.selectedIndex];
 
-        document.getElementById("duration").value =
-        selected.dataset.duration || "";
+            document.getElementById("duration").value =
+                selected.dataset.duration || "";
 
-        document.getElementById("fee").value =
-        selected.dataset.fee || "";
+            document.getElementById("fee").value =
+                selected.dataset.fee || "";
 
-    });
+        });
 
-
-    // FORM VALIDATION
-    const form = document.getElementById("studentForm");
-
-    form.addEventListener("submit", function(e){
-
-        let isValid = true;
-        let firstInvalidField = null;
-
-        // REGEX
-        let nameRegex = /^[A-Za-z ]+$/;
-        let emailRegex = /^[\w\.-]+@[\w\.-]+\.\w+$/;
-        let phoneRegex = /^\d{10}$/;
+        // INITIAL LOAD AUTO FILL
+        courseSelect.dispatchEvent(new Event("change"));
 
         // INPUTS
-        let firstName = document.getElementsByName("First_name")[0];
-        let lastName = document.getElementsByName("Last_name")[0];
-        let email = document.getElementsByName("email")[0];
-        let phone = document.getElementsByName("phone_no")[0];
-        let guardianName = document.getElementsByName("guardian_name")[0];
-        let guardianPhone = document.getElementsByName("guardian_phone_no")[0];
+        const firstName = document.getElementsByName("First_name")[0];
+        const lastName = document.getElementsByName("Last_name")[0];
+        const email = document.getElementsByName("email")[0];
+        const phone = document.getElementsByName("phone_no")[0];
+        const guardianName = document.getElementsByName("guardian_name")[0];
+        const guardianPhone = document.getElementsByName("guardian_phone_no")[0];
+        const dob = document.getElementById("id_dob");
+        const start_date = document.getElementById("id_start_date");
 
-        // REMOVE OLD ERRORS
-        document.querySelectorAll(".custom-error").forEach(el => el.remove());
+        // REGEX
+        const nameRegex = /^[A-Za-z ]+$/;
+        const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+        const phoneRegex = /^\d{10}$/;
 
-        // FUNCTION
-        function showError(input, message){
+        // SHOW ERROR
+        function showError(input, message) {
+
+            removeError(input);
 
             let error = document.createElement("span");
 
             error.className = "custom-error";
-
             error.style.color = "red";
             error.style.fontSize = "13px";
             error.style.display = "block";
@@ -252,59 +251,227 @@ document.addEventListener("DOMContentLoaded", function () {
             error.innerText = message;
 
             input.parentElement.appendChild(error);
+        }
 
-            if(!firstInvalidField){
-                firstInvalidField = input;
+        // REMOVE ERROR
+        function removeError(input) {
+
+            let oldError =
+                input.parentElement.querySelector(".custom-error");
+
+            if (oldError) {
+                oldError.remove();
+            }
+        }
+
+        // VALIDATE FIELD
+        function validateField(input, regex, emptyMsg, invalidMsg) {
+
+            let value = input.value.trim();
+
+            // EMPTY CHECK
+            if (value === "") {
+                showError(input, emptyMsg);
+                return false;
             }
 
-            isValid = false;
+            // REGEX CHECK
+            if (!regex.test(value)) {
+                showError(input, invalidMsg);
+                return false;
+            }
+
+            removeError(input);
+
+            return true;
         }
 
-        // VALIDATIONS
+        function validateDOB() {
 
-        if(!nameRegex.test(firstName.value.trim())){
-            showError(firstName, "Only alphabets allowed");
+            let selectedDate = new Date(dob.value);
+
+            let today = new Date();
+
+            today.setHours(0, 0, 0, 0);
+
+            removeError(dob);
+
+            if (dob.value === "") {
+                showError(dob, "DOB is required");
+                return false;
+            }
+
+            if (selectedDate >= today) {
+                showError(dob, "Select past date only");
+                return false;
+            }
+
+            return true;
         }
 
-        if(!nameRegex.test(lastName.value.trim())){
-            showError(lastName, "Only alphabets allowed");
+        function validateStart_Date() {
+
+            let selectedDate = new Date(start_date.value);
+
+            let today = new Date();
+
+            today.setHours(0, 0, 0, 0);
+
+            removeError(start_date);
+
+            if (start_date.value === "") {
+                showError(start_date, "Start date is required");
+                return false;
+            }
+
+            if (selectedDate < today) {
+                showError(start_date, "Select today or future date only");
+                return false;
+            }
+
+            return true;
         }
 
-        if(!emailRegex.test(email.value.trim())){
-            showError(email, "Enter valid email");
-        }
 
-        if(!phoneRegex.test(phone.value.trim())){
-            showError(phone, "Enter valid 10 digit number");
-        }
+        // LIVE VALIDATION
+        firstName.addEventListener("input", function () {
+            validateField(
+                firstName,
+                nameRegex,
+                "First name is required",
+                "Only alphabets allowed"
+            );
+        });
 
-        if(!nameRegex.test(guardianName.value.trim())){
-            showError(guardianName, "Only alphabets allowed");
-        }
+        lastName.addEventListener("input", function () {
+            validateField(
+                lastName,
+                nameRegex,
+                "Last name is required",
+                "Only alphabets allowed"
+            );
+        });
 
-        if(!phoneRegex.test(guardianPhone.value.trim())){
-            showError(guardianPhone, "Enter valid 10 digit number");
-        }
+        email.addEventListener("input", function () {
+            validateField(
+                email,
+                emailRegex,
+                "Email is required",
+                "Enter valid email"
+            );
+        });
 
-        // STOP SUBMIT
-        if(!isValid){
+        phone.addEventListener("input", function () {
+            validateField(
+                phone,
+                phoneRegex,
+                "Phone number is required",
+                "Enter valid 10 digit number"
+            );
+        });
 
-            e.preventDefault();
+        guardianName.addEventListener("input", function () {
+            validateField(
+                guardianName,
+                nameRegex,
+                "Guardian name is required",
+                "Only alphabets allowed"
+            );
+        });
 
-            firstInvalidField.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
+        guardianPhone.addEventListener("input", function () {
+            validateField(
+                guardianPhone,
+                phoneRegex,
+                "Guardian phone is required",
+                "Enter valid 10 digit number"
+            );
+        });
 
-            firstInvalidField.focus();
-        }
+        dob.addEventListener("change", function(){
+            validateDOB();
+        });
+
+        start_date.addEventListener("change", function(){
+            validateStart_Date();
+        });
+
+        // SUBMIT VALIDATION
+        form.addEventListener("submit", function (e) {
+
+            let isValid = true;
+
+            if (!validateField(
+                firstName,
+                nameRegex,
+                "First name is required",
+                "Only alphabets allowed"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateField(
+                lastName,
+                nameRegex,
+                "Last name is required",
+                "Only alphabets allowed"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateField(
+                email,
+                emailRegex,
+                "Email is required",
+                "Enter valid email"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateField(
+                phone,
+                phoneRegex,
+                "Phone number is required",
+                "Enter valid 10 digit number"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateField(
+                guardianName,
+                nameRegex,
+                "Guardian name is required",
+                "Only alphabets allowed"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateField(
+                guardianPhone,
+                phoneRegex,
+                "Guardian phone is required",
+                "Enter valid 10 digit number"
+            )) {
+                isValid = false;
+            }
+
+            if(!validateDOB()){
+                isValid = false;
+            }
+
+            if(!validateStart_Date()){
+                isValid = false;
+            }
+
+            // STOP SUBMIT
+            if (!isValid) {
+                e.preventDefault();
+            }
+
+        });
 
     });
 
-});
-
 </script>
-
-
 
 {% endblock %}

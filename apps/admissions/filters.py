@@ -10,27 +10,27 @@ class StudentFilter(django_filters.FilterSet):
 
     phone_no = django_filters.CharFilter(
         field_name='phone_no',
-        lookup_expr='icontains'
+        lookup_expr='iexact'
     )
 
     course = django_filters.CharFilter(
         field_name='admissions__course__course',
-        lookup_expr='icontains'
+        lookup_expr='iexact'
     )
 
     batch = django_filters.CharFilter(
         field_name='admissions__enrollment__batch',
-        lookup_expr='icontains'
+        lookup_expr='iexact'
     )
 
     status = django_filters.CharFilter(
         field_name='admissions__status',
-        lookup_expr='icontains'
+        lookup_expr='iexact'
     )
 
     payment_status = django_filters.CharFilter(
         field_name='admissions__enrollment__payment_status',
-        lookup_expr='icontains'
+        lookup_expr='iexact'
     )
 
     class Meta:
@@ -46,8 +46,8 @@ class StudentFilter(django_filters.FilterSet):
 
         for term in terms:
             query &= (
-                Q(First_name__icontains=term) |
-                Q(Last_name__icontains=term)
+                Q(First_name__iexact=term) |
+                Q(Last_name__iexact=term)
             )
 
         if value.isdigit():

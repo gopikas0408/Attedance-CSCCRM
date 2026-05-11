@@ -73,6 +73,15 @@ class StudentForm(forms.ModelForm):
             raise forms.ValidationError("Must be 10 digits")
 
         return phone
+
+
+    def clean_dob(self):
+        dob = self.cleaned_data['dob']
+        
+        if dob >= date.today():
+            raise forms.ValidationError("DOB must be a past date!")
+
+        return dob
     
     def clean_photo(self):
         photo = self.cleaned_data.get('photo')
