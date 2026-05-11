@@ -34,7 +34,7 @@
                 {% if admission.status|lower == "enquiry" %}
                 <span class="dropped">Inactive student</span>
                 {% elif admission.status|lower == "confirmed" %}
-                <span class="dropped">Inactive student</span>
+                <span class="enrolled">Active student</span>
                 {% elif admission.status|lower == "enrolled" %}
                 <span class="enrolled">Active student</span>
                 {% elif admission.status|lower == "dropped" %}
@@ -86,19 +86,19 @@
     <div class="stats">
         <div class="box total">
             <div class="fees-icon1" id="icon"><i class="fa-solid fa-wallet"></i></div>
-           <div class="text"><span>Total Fee</span><br>₹10,000</div>
+           <div class="text"><span>Total Fee</span><br>{{ student.total_fee }}</div>
         </div>
         <div class="box paid">
             <div class="fees-icon2" id="icon"><i class="fa-regular fa-circle-check"></i></div>
-            <div class="text"><span>Paid</span><br>₹10,000</div>
+            <div class="text"><span>Paid</span><br>{{ student.total_paid }}</div>
         </div>
         <div class="box pending">
             <div class="fees-icon3" id="icon"><i class="fa-solid fa-clock"></i></div>
-            <div class="text"><span>Pending</span><br>₹10,000</div>
+            <div class="text"><span>Pending</span><br>{{ student.pending_amount }}</div>
         </div>
         <div class="box trans">
             <div class="fees-icon4" id="icon"><i class="fas fa-file-alt icon-blue"></i></div>
-            <div class="text"><span>Transactions</span><br>1</div>
+            <div class="text"><span>Transactions</span><br>{{ payments.count }}</div>
         </div>
     </div>
 
@@ -115,12 +115,33 @@
                 <th>Status</th>
             </tr>
             <tr>
-                <td>{{ student.payment_id }}</td>
-                <td>₹10,000</td>
-                <td>UPI</td>
-                <td>Jan 01, 2026</td>
-                <td><span class="success">Success</span></td>
-            </tr>
+                {% for p in payments %}
+                <td>{{ p.id }}</td>
+                <td>₹{{ p.amount }}</td>
+                <td>{{ p.mode }}</td>
+                <td>{{ p.date }}</td>
+                <td>
+
+                    {% if p.status == "SUCCESS" %}
+                    <span class="success">Success</span>
+
+                    {% elif p.status == "PENDING" %}
+                    <span class="pending">Pending</span>
+
+                    {% else %}
+                    <span class="failed">Failed</span>
+
+                    {% endif %}
+
+                </td>
+
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No payments found</td>
+                </tr>
+                {% endfor %}
         </table>
     </div>
 </div>

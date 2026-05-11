@@ -172,6 +172,7 @@ def generate_receipt(request, pk):
 def student_list(request):
 
     students = Student.objects.prefetch_related(
+        'payments',
         'admissions__enrollment',
         'admissions__course',
     ).all()
@@ -347,16 +348,27 @@ def search_students(request):
 
     
 def view_student(request, id):
+
     student = Student.objects.prefetch_related(
+        'payments',
         'admissions__course',
         'admissions__enrollment'
     ).get(id=id)
 
-    admission = student.admissions.first()   # get latest/first admission
+    admission = student.admissions.first()
+
     enrollment = admission.enrollment if admission else None
 
+    payments = student.payments.all().order_by('-date')
+
     return render(request, "admissions/view_student.html", {
+
         'student': student,
         'admission': admission,
-        'enrollment': enrollment
+        'enrollment': enrollment,
+        'payments': payments,
+
+        'total_paid': student.total_paid(),
+        'pending': student.pending_amount(),
+
     })

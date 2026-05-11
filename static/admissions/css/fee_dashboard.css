@@ -1,0 +1,28 @@
+body{
+    margin-top: 100px;
+}
+
+.personal-info{
+    width: 100%;
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;   
+    border-radius: 10px;
+    box-shadow: -5px 0 0 0 rgb(255, 202, 43);
+    box-sizing: border-box;
+}
+
+button {
+    background: rgb(255, 202, 43);
+    color: rgb(30, 42, 120);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: rgb(30, 42, 120);
+    color: rgb(255, 202, 43);
+    box-shadow: 0px 4px 10px rgb(30, 42, 120);
+}

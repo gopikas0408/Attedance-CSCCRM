@@ -30,8 +30,8 @@ class StudentForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'First_name': forms.TextInput(attrs={'placeholder': 'Enter first name', 'required': True}),
-            'Last_name': forms.TextInput(attrs={'placeholder': 'Enter last name', 'required': True}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name', 'required': True}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Enter last name', 'required': True}),
             'email': forms.EmailInput(attrs={'placeholder': 'Enter email', 'required': True}),
             'phone_no': forms.TextInput(attrs={'placeholder': 'Enter phone number', 'required': True}),
             'dob': forms.DateInput(attrs={'type': 'date', 'required': True}),
@@ -44,16 +44,16 @@ class StudentForm(forms.ModelForm):
 
         }
     
-    def clean_First_name(self):
-        value = self.cleaned_data.get('First_name')
+    def clean_first_name(self):
+        value = self.cleaned_data.get('first_name')
 
         if not value.replace(" ", "").isalpha():
             raise forms.ValidationError("Only letters allowed")
 
         return value
-    
-    def clean_Last_name(self):
-        value = self.cleaned_data.get('Last_name')
+
+    def clean_last_name(self):
+        value = self.cleaned_data.get('last_name')
 
         if not value.replace(" ", "").isalpha():
             raise forms.ValidationError("Only letters allowed (no numbers/symbols)")

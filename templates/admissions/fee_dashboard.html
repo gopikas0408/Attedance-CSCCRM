@@ -1,6 +1,14 @@
 {% extends 'admissions/base.html' %}
 {% load static %}
 
+{% block title %}
+    <title>Payment Process</title>
+{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'admissions/css/fee_dashboard.css' %}">
+{% endblock extra_css %}
+
 {% block content %}
 
 <div class="container mt-4">
@@ -32,7 +40,7 @@
             </div>
         </div>
     </div>
-
+<div class="personal-info">
     <!-- Payment Form -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
@@ -74,14 +82,17 @@
                     <textarea name="remarks" class="form-control"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success">
+                <button type="submit">
                     Save Payment
                 </button>
+                
             </form>
         </div>
     </div>
+</div>
     
     <!-- Payment History Table -->
+<div class="personal-info">
     <div class="card shadow-sm">
         <div class="card-body">
             <h5 class="mb-3">Payment History</h5>
@@ -120,6 +131,7 @@
 
         </div>
     </div>
+</div>
 
 </div>
 
