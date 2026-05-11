@@ -1,5 +1,9 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.utils import timezone
+from django.db.models import Sum
+from django.core.validators import MinValueValidator 
+from decimal import Decimal
 
 
 name_validator = RegexValidator(
@@ -20,8 +24,8 @@ email_validator = RegexValidator(
 
 
 class Student(models.Model):
-    First_name = models.CharField(max_length=20, blank=False, validators=[name_validator])
-    Last_name = models.CharField(max_length=20, blank=False, validators=[name_validator])
+    first_name = models.CharField(max_length=20, blank=False, validators=[name_validator])
+    last_name = models.CharField(max_length=20, blank=False, validators=[name_validator])
     dob = models.DateField()
     phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator])
 
@@ -44,7 +48,59 @@ class Student(models.Model):
     certificate=models.FileField(upload_to='certificates/', null=False, blank=False)
 
     def __str__(self):
-        return f"{self.First_name} {self.Last_name}"
+        return f"{self.first_name} {self.last_name}"
+
+    def total_paid(self):
+        return self.payments.filter(
+        status='SUCCESS'
+    ).aggregate(
+        total=Sum('amount')
+    )['total'] or 0
+    
+    def total_fee(self):
+        admission = self.admissions.first()
+        if admission and admission.course:
+            return admission.course.course_fee
+        return 0
+    
+    def pending_amount(self):
+        pending = self.total_fee() - self.total_paid()
+        return max(pending, 0)
+
+class Payment(models.Model):
+    PAYMENT_MODES = [
+        ('UPI', 'UPI'),
+        ('CASH', 'Cash'),
+        ('CARD', 'Card'),
+    ]
+
+    STATUS_CHOICES = [
+        ('SUCCESS', 'Success'),
+        ('PENDING', 'Pending'),
+        ('FAILED', 'Failed'),
+    ]
+
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='payments')
+    transaction_id = models.CharField(
+        max_length=20,
+        unique=True,
+        blank=True,
+        null=True
+    )
+    amount = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    validators=[MinValueValidator(Decimal('1.00'))]
+    )
+    mode = models.CharField(max_length=10, choices=PAYMENT_MODES)
+    reference_id = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.TextField(blank=True)
+    date = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='SUCCESS')
+
+    def __str__(self):
+        return f"{self.student.first_name} - ₹{self.amount}"
+
 
 
 class Course(models.Model):

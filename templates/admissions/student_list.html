@@ -100,7 +100,7 @@
         {% for admission in student.admissions.all %}
         {% with e=admission.enrollment %}
         <tr>
-            <td>{{ student.First_name }} {{ student.Last_name }}</td>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
 
             <td>{{ admission.course }}</td>
 
@@ -158,7 +158,7 @@
         {% endwith %}
         {% empty %}
         <tr>
-            <td>{{ student.First_name }} {{ student.Last_name }}</td>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
             <td colspan="6">No admission</td>
         </tr>
         {% endfor %}

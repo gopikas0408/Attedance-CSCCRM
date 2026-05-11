@@ -46,8 +46,8 @@ class StudentFilter(django_filters.FilterSet):
 
         for term in terms:
             query &= (
-                Q(First_name__iexact=term) |
-                Q(Last_name__iexact=term)
+                Q(first_name__iexact=term) |
+                Q(last_name__iexact=term)
             )
 
         if value.isdigit():

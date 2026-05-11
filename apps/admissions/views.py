@@ -9,7 +9,9 @@ from reportlab.platypus import SimpleDocTemplate, Table
 from .filters import StudentFilter
 from datetime import date
 from django.db import transaction
-
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from . services import get_fee_summary
 
 # Create your views here.
 
@@ -58,6 +60,114 @@ def student(request):
         'enrollment_form': enrollment_form,
         'courses': courses,
     })
+
+
+def fee_dashboard(request):
+
+    students = Student.objects.all()
+
+    payments = Payment.objects.order_by('-date')
+
+    # SAVE PAYMENT
+    if request.method == 'POST':
+
+        student_id = request.POST.get('student')
+
+        amount = request.POST.get('amount')
+
+        mode = request.POST.get('mode')
+
+        reference = request.POST.get('reference')
+
+        remarks = request.POST.get('remarks')
+
+        Payment.objects.create(
+            student_id=student_id,
+            amount=amount,
+            mode=mode,
+            reference_id=reference,
+            remarks=remarks
+        )
+
+        messages.success(
+            request,
+            "Payment Added Successfully"
+        )
+
+        return redirect('fee_dashboard')
+
+    # DASHBOARD SUMMARY
+    summary = get_fee_summary()
+
+    # STUDENT FEE STATUS
+    student_fee_status = []
+
+    for student in students:
+
+        total_fee = student.total_fee()
+
+        paid = student.total_paid()
+
+        pending = student.pending_amount()
+
+        # STATUS
+        if pending <= 0:
+            status = 'Paid'
+
+        elif paid == 0:
+            status = 'Pending'
+
+        else:
+            status = 'Partial'
+
+        student_fee_status.append({
+            'student': student,
+            'total_fee': total_fee,
+            'paid': paid,
+            'pending': pending,
+            'status': status
+        })
+
+    context = {
+        'students': students,
+        'payments': payments,
+        'summary': summary,
+        'student_fee_status': student_fee_status
+    }
+
+    return render(
+        request,
+        'admissions/fee_dashboard.html',
+        context
+    )
+
+
+#Student Profile Integration===========
+def student_detail(request, pk):
+    student = Student.objects.get(id=pk)
+    payments = student.payments.all()
+
+    context = {
+        'student': student,
+        'payments': payments,
+        'total_paid': student.total_paid(),
+        'pending': student.pending_amount()
+    }
+
+    return render(request, 'students/detail.html', context)
+
+# pdf view ========
+def generate_receipt(request, pk):
+    payment = Payment.objects.get(id=pk)
+
+    template = get_template('admissions/fee_receipt.html')
+    html = template.render({'payment': payment})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="receipt_{pk}.pdf"'
+
+    pisa.CreatePDF(html, dest=response)
+    return response
 
 def student_list(request):
 
