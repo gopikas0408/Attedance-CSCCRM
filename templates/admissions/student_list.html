@@ -85,6 +85,7 @@
     <table>
         <tr>
             <th>Student</th>
+            <th>Student ID</th>
             <th>Course</th>
             <th>Batch</th>
             <th>Phone</th>
@@ -101,6 +102,8 @@
         {% with e=admission.enrollment %}
         <tr>
             <td>{{ student.first_name }} {{ student.last_name }}</td>
+
+            <td>{{ student.id }}</td>
 
             <td>{{ admission.course }}</td>
 
