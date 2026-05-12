@@ -38,9 +38,9 @@ class StudentForm(forms.ModelForm):
             'guardian_name': forms.TextInput(attrs={'placeholder': 'Enter guardian name', 'required': True}),
             'guardian_phone_no': forms.TextInput(attrs={'placeholder': 'Enter guardian phone', 'required': True}),
             'address': forms.Textarea(attrs={'placeholder': 'Enter address', 'rows': 2, 'cols': 30, 'style': 'font-size:14px; padding:5px;', 'required': True}),
-            'photo': forms.FileInput(attrs={'required': True, 'accept': '.jpg,.jpeg,.png'}),
-            'id_proof': forms.FileInput(attrs={'required': True, 'accept': '.pdf,doc,.docx'}),
-            'certificate': forms.FileInput(attrs={'required': True, 'accept': '.pdf,doc,.docx'}),
+            'photo': forms.FileInput(attrs={'accept': '.jpg,.jpeg,.png'}),
+            'id_proof': forms.FileInput(attrs={ 'accept': '.pdf,doc,.docx'}),
+            'certificate': forms.FileInput(attrs={ 'accept': '.pdf,doc,.docx'}),
 
         }
     
@@ -83,25 +83,6 @@ class StudentForm(forms.ModelForm):
 
         return dob
     
-    def clean_photo(self):
-        photo = self.cleaned_data.get('photo')
-        if photo:
-            validate_image(photo)
-        return photo
-    
-    def clean_id_proof(self):
-        file = self.cleaned_data.get('id_proof')
-        if file:
-            validate_document(file)
-        return file
-
-
-    def clean_certificate(self):
-        file = self.cleaned_data.get('certificate')
-        if file:
-            validate_document(file)
-        return file
-
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course

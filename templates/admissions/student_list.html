@@ -187,17 +187,19 @@
 
     <!-- LEFT TEXT -->
     <div class="pagination-info">
-        Showing {{ page_obj.end_index }} of {{ page_obj.paginator.count }} students
+        {% if page == '2' %}
+        Showing remaining students
+        {% else %}
+        Showing 5 of {{ filter.qs.count }} students
+        {% endif %}
     </div>
 
     <!-- RIGHT BUTTONS -->
     <div class="pagination-buttons">
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}" class="btn prev">Prev</a>
-        {% endif %}
-
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}"  class="btn next">Next </a>
+        {% if page == '2' %}
+        <a href="?page=1" class="btn prev">Prev</a>
+        {% else %}
+        <a href="?page=2" class="btn next">Next</a>
         {% endif %}
     </div>
 
@@ -230,17 +232,30 @@
 
 <script>
     function toggleDropdown(button) {
+
+        // close all dropdowns
+        document.querySelectorAll(".dropdown-content").forEach(d => {
+            if (d !== button.nextElementSibling) {
+                d.classList.remove("show");
+            }
+        });
+
+        // toggle current dropdown
         let dropdown = button.nextElementSibling;
         dropdown.classList.toggle("show");
     }
 
-    // optional: outside click close
+    // outside click close
     document.addEventListener("click", function (e) {
+
         if (!e.target.matches('.dots')) {
+
             document.querySelectorAll(".dropdown-content").forEach(d => {
                 d.classList.remove("show");
             });
+
         }
+
     });
 </script>
 

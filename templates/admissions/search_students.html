@@ -19,9 +19,9 @@
 
     <div class="filter-grid">
 
-    <input type="text" name="search" pattern="^[A-Za-z ]+$" value="{{ request.GET.search }}" placeholder="Search">
+    <input type="text" name="search" pattern="^[A-Za-z ]+$" value="{{ request.GET.search }}" placeholder="Search name">
 
-    <input type="text" name="id" pattern="^\d{1,5}$" value="{{ request.GET.id }}" placeholder="ID">
+    <input type="text" name="id" pattern="^\d{1,5}$" value="{{ request.GET.id }}" placeholder="Search ID">
 
     <input type="text" name="phone_no" maxlength="10" pattern="^\d{10}$" value="{{ request.GET.phone_no }}" placeholder="Phone">
 
@@ -68,7 +68,7 @@
 </form>
 
 <div class="pagination-info">
-        Showing {{ page_obj.paginator.count }} results matching your filters
+        Showing {{ page_obj|length}} results matching your filters
     </div>
 
 <div class="table-wrapper">

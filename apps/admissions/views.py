@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.core.paginator import Paginator
@@ -181,10 +183,19 @@ def student_list(request):
     student_filter = StudentFilter(request.GET, queryset=students)
     filtered_students = student_filter.qs.distinct().order_by('-id')
 
-    #  PAGINATION
-    paginator = Paginator(filtered_students, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # FIRST 5
+    first_five = filtered_students[:5]
+
+    # REMAINING STUDENTS
+    remaining_students = filtered_students[5:]
+
+
+    page = request.GET.get('page')
+
+    if page == '2':
+        page_obj = remaining_students
+    else:
+        page_obj = first_five
 
     format = request.GET.get('format')
 
@@ -199,7 +210,7 @@ def student_list(request):
                 enrollment = getattr(admission, 'enrollment', None)
 
                 ws.append([
-                    f"{s.First_name} {s.Last_name}",
+                    f"{s.first_name} {s.last_name}",
                     str(admission.course),
                     enrollment.batch if enrollment else "-",
                     s.phone_no,
@@ -226,7 +237,7 @@ def student_list(request):
                 enrollment = getattr(admission, 'enrollment', None)
 
                 data.append([
-                    f"{s.First_name} {s.Last_name}",
+                    f"{s.first_name} {s.last_name}",
                     str(admission.course),
                     enrollment.batch if enrollment else "-",
                     s.phone_no,
@@ -242,6 +253,7 @@ def student_list(request):
 
     return render(request, 'admissions/student_list.html', {
         'page_obj': page_obj,
+        'page': page,
         'filter': student_filter,
         'courses': Course.objects.all(),
         'total_students': filtered_students.count()
@@ -263,8 +275,8 @@ def edit_student(request, id):
 
         # ================= PERSONAL INFO =================
 
-        student.First_name = request.POST.get('First_name')
-        student.Last_name = request.POST.get('Last_name')
+        student.first_name = request.POST.get('first_name')
+        student.last_name = request.POST.get('last_name')
         student.email = request.POST.get('email')
         student.phone_no = request.POST.get('phone_no')
         student.dob = request.POST.get('dob')
@@ -336,9 +348,7 @@ def search_students(request):
     student_filter = StudentFilter(request.GET, queryset=students)
     filtered_students = student_filter.qs.distinct()
 
-    paginator = Paginator(filtered_students, 2)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = filtered_students
 
     return render(request, "admissions/search_students.html", {
         'filter': student_filter,

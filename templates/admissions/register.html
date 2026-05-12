@@ -162,25 +162,16 @@
                 <div>
                     <label>📷 Student Photo</label>
                     {{ student_form.photo }}
-                    {% if student_form.photo.errors %}
-                    <span class="error">{{ student_form.photo.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <div>
                     <label>📄 ID Proof</label>
                     {{ student_form.id_proof }}
-                    {% if student_form.id_proof.errors %}
-                    <span class="error">{{ student_form.id_proof.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <div>
                     <label>📜 Certificate</label>
                     {{ student_form.certificate }}
-                    {% if student_form.certificate.errors %}
-                    <span class="error">{{ student_form.certificate.errors.0 }}</span>
-                    {% endif %}
                 </div>
             </div>
         </div>
