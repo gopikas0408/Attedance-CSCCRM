@@ -95,7 +95,7 @@
                     <select name="course" id="id_course">
                         <option value="">Select Course</option>
                         {% for c in courses %}
-                        <option value="{{ c.id }}" {% if request.POST.course == c.id|stringformat:"s" %}selected{% endif %} data-duration="{{ c.duration }}" data-fee="{{ c.course_fee }}">
+                        <option value="{{ c.id }}" data-duration="{{ c.duration }}" data-fee="{{ c.course_fee }}">
                             {{ c.course }}
                         </option>
                         {% endfor %}
@@ -178,7 +178,7 @@
 
         <!-- ================= BUTTON ================= -->
         <div class="form-btn">
-            <a href="{% url 'student' %}" class="link">Clear Form</a>
+            <button type="reset" class="clear-btn">Clear Form</button>
             <button type="submit">
                 <i class="fas fa-check"></i> Save & Generate ID
             </button>
@@ -379,11 +379,11 @@
             );
         });
 
-        dob.addEventListener("change", function(){
+        dob.addEventListener("change", function () {
             validateDOB();
         });
 
-        start_date.addEventListener("change", function(){
+        start_date.addEventListener("change", function () {
             validateStart_Date();
         });
 
@@ -446,11 +446,11 @@
                 isValid = false;
             }
 
-            if(!validateDOB()){
+            if (!validateDOB()) {
                 isValid = false;
             }
 
-            if(!validateStart_Date()){
+            if (!validateStart_Date()) {
                 isValid = false;
             }
 

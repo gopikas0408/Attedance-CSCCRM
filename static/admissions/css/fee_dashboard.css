@@ -10,8 +10,12 @@ body{
     border-radius: 10px;
     box-shadow: -5px 0 0 0 rgb(255, 202, 43);
     box-sizing: border-box;
+    transition: 0.3s ease;
 }
-
+.personal-info:hover{
+    transform: translateY(-4px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.12);
+}
 button {
     background: rgb(255, 202, 43);
     color: rgb(30, 42, 120);
@@ -19,10 +23,139 @@ button {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s ease;
 }
 
 button:hover{
     background-color: rgb(30, 42, 120);
     color: rgb(255, 202, 43);
     box-shadow: 0px 4px 10px rgb(30, 42, 120);
+}
+.card{
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: 0.3s ease;
+}
+
+.card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+}
+
+/* SUMMARY CARD DESIGN */
+
+.summary-card{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    height: 100%;
+}
+
+.summary-card h5{
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.summary-card p{
+    margin: 0;
+}
+
+.summary-icon{
+    font-size: 40px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.amount{
+    font-size: 48px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+
+/* TABLE DESIGN */
+
+.table{
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead{
+    background-color: rgb(30, 42, 120);
+    color: white;
+}
+
+.table th{
+    padding: 14px;
+    font-size: 15px;
+}
+
+.table td{
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover{
+    background-color: #f5f7ff;
+    transition: 0.2s;
+}
+
+/* ALERT MESSAGE */
+
+.alert{
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    animation: fadeIn 0.4s ease;
+}
+
+.alert-success{
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger{
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    .amount{
+        font-size: 32px;
+    }
+
+    .summary-card h5{
+        font-size: 18px;
+    }
+
+    button{
+        width: 100%;
+    }
+
+    .table{
+        font-size: 14px;
+    }
 }

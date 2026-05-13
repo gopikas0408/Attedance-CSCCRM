@@ -15,6 +15,8 @@ from xhtml2pdf import pisa
 from django.template.loader import get_template
 from . services import get_fee_summary
 
+from django.core.mail import send_mail
+from django.conf import settings
 # Create your views here.
 
 def home(request):
@@ -22,6 +24,7 @@ def home(request):
 
 
 def student(request):
+
     student_form = StudentForm()
     admission_form = AdmissionForm()
     enrollment_form = EnrollmentForm()
@@ -29,15 +32,19 @@ def student(request):
     courses = Course.objects.all()
 
     if request.method == "POST":
+
         student_form = StudentForm(request.POST, request.FILES)
         admission_form = AdmissionForm(request.POST)
         enrollment_form = EnrollmentForm(request.POST, request.FILES)
 
-        if (student_form.is_valid() and 
-            admission_form.is_valid() and 
-            enrollment_form.is_valid()):
+        if (
+            student_form.is_valid() and
+            admission_form.is_valid() and
+            enrollment_form.is_valid()
+        ):
 
             with transaction.atomic():
+
                 student = student_form.save()
 
                 admission = Admission.objects.create(
@@ -47,13 +54,74 @@ def student(request):
                 )
 
                 enrollment = enrollment_form.save(commit=False)
+
                 enrollment.admission = admission
+
                 enrollment.save()
 
+                # USER EMAIL
+
+                send_mail(
+                    subject='🎓 Admission Confirmation - CSC Academy',
+
+                    message=f'''
+Dear {student.first_name},
+
+Congratulations! 🎉
+
+Your admission has been successfully confirmed at CSC Academy.
+
+Course Enrolled:
+{admission.course}
+
+We are excited to have you as part of our learning journey.
+
+Best Regards,
+CSC Academy
+''',
+
+                    from_email=settings.EMAIL_HOST_USER,
+
+                    recipient_list=[student.email],
+
+                    fail_silently=False
+                )
+
+                # ADMIN EMAIL
+
+                send_mail(
+                    subject='📌 New Student Admission Alert',
+
+                    message=f'''
+A new student admission has been registered.
+
+Student Details
+-------------------------
+
+Name   : {student.first_name} {student.last_name}
+
+Course : {admission.course}
+
+Phone  : {student.phone_no}
+
+Email  : {student.email}
+
+Please verify the records from the admin panel.
+''',
+
+                    from_email=settings.EMAIL_HOST_USER,
+
+                    recipient_list=['admin@gmail.com'],
+
+                    fail_silently=False
+                )
+
             messages.success(request, "Student enrolled successfully!")
-            return redirect('student_list')
-        
+
+            return redirect('fee_dashboard')
+
         else:
+
             messages.error(request, "Form has errors. Please check!")
 
     return render(request, 'admissions/register.html', {
@@ -66,7 +134,7 @@ def student(request):
 
 def fee_dashboard(request):
 
-    students = Student.objects.all()
+    students = Student.objects.all().order_by('-id')
 
     payments = Payment.objects.order_by('-date')
 
@@ -76,12 +144,38 @@ def fee_dashboard(request):
         student_id = request.POST.get('student')
 
         amount = request.POST.get('amount')
+        try:
+            amount = float(amount)
+        except:
+            messages.error(request, "Invalid amount")
+            return redirect('fee_dashboard')
+
+
 
         mode = request.POST.get('mode')
 
         reference = request.POST.get('reference')
 
         remarks = request.POST.get('remarks')
+        
+        student = Student.objects.get(id=student_id)
+
+        total_fee = student.total_fee()
+        paid_amount = student.total_paid()
+        pending_amount = total_fee - paid_amount
+        
+        # negative check
+        if amount <= 0:
+            messages.error(request, "Amount must be greater than 0.")
+            return redirect('fee_dashboard')
+        
+        #exceed amount check
+        if amount > pending_amount:
+            messages.error(
+                request,
+                f"only remaining amount ₹{pending_amount} can be paid. "
+            )
+            return redirect('fee_dashboard')
 
         Payment.objects.create(
             student_id=student_id,
@@ -97,6 +191,36 @@ def fee_dashboard(request):
         )
 
         return redirect('fee_dashboard')
+    # EXPORT EXCEL
+    
+    format = request.GET.get('format')
+
+    if format == 'excel':
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Fee Payments"
+        ws.append(["Student", "Course", "Batch", "Amount", "Mode", "Reference", "Date"])
+        for payment in payments:
+            ws.append([
+                f"{payment.student.first_name} {payment.student.last_name}",
+                str(payment.date),
+                payment.mode,
+                payment.reference_id,
+                payment.remarks
+            ])
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=fee_payments.xlsx'
+        wb.save(response)
+        return response
+
+       
+
+     # EXPORT PDF
+    
+    
+
 
     # DASHBOARD SUMMARY
     summary = get_fee_summary()
