@@ -90,8 +90,6 @@ CSC Academy
 
                 # ADMIN EMAIL
 
-                print("MAIL FUNCTION START")
-
                 send_mail(
                     subject='📌 New Student Admission Alert',
 
@@ -448,10 +446,7 @@ def edit_student(request, id):
 
         enrollment.save()
 
-        messages.success(request, "✅ Student details updated successfully")
-
         return redirect('student_list')
-        
 
     context = {
         'student': student,
@@ -512,8 +507,6 @@ def view_student(request, id):
         'pending': student.pending_amount(),
 
     })
-
-
 
 def check_email(request):
 
