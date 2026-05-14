@@ -446,6 +446,8 @@ def edit_student(request, id):
 
         enrollment.save()
 
+        messages.success(request, "✅ Student details updated successfully")
+
         return redirect('student_list')
 
     context = {
