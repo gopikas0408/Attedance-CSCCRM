@@ -62,60 +62,60 @@ def student(request):
 
                 # USER EMAIL
 
-                send_mail(
-                    subject='🎓 Admission Confirmation - CSC Academy',
+#                 send_mail(
+#                     subject='🎓 Admission Confirmation - CSC Academy',
 
-                    message=f'''
-Dear {student.first_name},
+#                     message=f'''
+# Dear {student.first_name},
 
-Congratulations! 🎉
+# Congratulations! 🎉
 
-Your admission has been successfully confirmed at CSC Academy.
+# Your admission has been successfully confirmed at CSC Academy.
 
-Course Enrolled:
-{admission.course}
+# Course Enrolled:
+# {admission.course}
 
-We are excited to have you as part of our learning journey.
+# We are excited to have you as part of our learning journey.
 
-Best Regards,
-CSC Academy
-''',
+# Best Regards,
+# CSC Academy
+# ''',
 
-                    from_email=settings.EMAIL_HOST_USER,
+#                     from_email=settings.EMAIL_HOST_USER,
 
-                    recipient_list=[student.email],
+#                     recipient_list=[student.email],
 
-                    fail_silently=False
-                )
+#                     fail_silently=False
+#                 )
 
-                # ADMIN EMAIL
+#                 # ADMIN EMAIL
 
-                send_mail(
-                    subject='📌 New Student Admission Alert',
+#                 send_mail(
+#                     subject='📌 New Student Admission Alert',
 
-                    message=f'''
-A new student admission has been registered.
+#                     message=f'''
+# A new student admission has been registered.
 
-Student Details
--------------------------
+# Student Details
+# -------------------------
 
-Name   : {student.first_name} {student.last_name}
+# Name   : {student.first_name} {student.last_name}
 
-Course : {admission.course}
+# Course : {admission.course}
 
-Phone  : {student.phone_no}
+# Phone  : {student.phone_no}
 
-Email  : {student.email}
+# Email  : {student.email}
 
-Please verify the records from the admin panel.
-''',
+# Please verify the records from the admin panel.
+# ''',
 
-                    from_email=settings.EMAIL_HOST_USER,
+#                     from_email=settings.EMAIL_HOST_USER,
 
-                    recipient_list=['admin@gmail.com'],
+#                     recipient_list=['admin@gmail.com'],
 
-                    fail_silently=False
-                )
+#                     fail_silently=False
+#                 )
 
             messages.success(request, "Student enrolled successfully!")
 
