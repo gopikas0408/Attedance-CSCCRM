@@ -1,11 +1,11 @@
 body{
     position: relative;
-    top: 100px;
+    top: 10px;
 }
 
-.container {
-    width: 90%;
-    margin: auto;
+.edit-container {
+    width: 95%;
+    margin: 70px auto 20px auto; 
 }
 
 .filter-grid{

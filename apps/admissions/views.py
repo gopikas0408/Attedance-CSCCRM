@@ -90,6 +90,8 @@ CSC Academy
 
                 # ADMIN EMAIL
 
+                print("MAIL FUNCTION START")
+
                 send_mail(
                     subject='📌 New Student Admission Alert',
 

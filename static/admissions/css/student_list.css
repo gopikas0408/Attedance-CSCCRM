@@ -1,7 +1,13 @@
 body {
     position: relative;
-    top: 70px;
+    top: 30px;
     overflow-x: hidden;
+}
+
+.edit-container {
+    width: 95%;
+    margin: 70px auto 20px auto; 
+
 }
 
 .list-container {

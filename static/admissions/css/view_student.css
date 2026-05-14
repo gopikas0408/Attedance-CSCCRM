@@ -5,7 +5,13 @@
 
 body {
     position: relative;
-    top: 80px;
+    top: 40px;
+}
+
+.edit-container {
+    width: 95%;
+    margin: 70px auto 20px auto; 
+
 }
 
 

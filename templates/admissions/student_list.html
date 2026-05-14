@@ -11,13 +11,13 @@
 
 {% block content %}
 
-<div class="container">
+<div class="edit-container">
 
     <!-- FILTER FORM -->
     <form method="GET" class="top-bar">
 
         <input type="text" name="search" pattern="^[A-Za-z ]+$" value="{{ request.GET.search }}"
-            placeholder="Search name">
+            placeholder="Search name" required>
 
         <input type="text" name="id" pattern="^\d{1,5}$" value="{{ request.GET.id }}" placeholder="Search ID">
 

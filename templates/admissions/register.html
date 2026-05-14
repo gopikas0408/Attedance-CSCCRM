@@ -81,9 +81,9 @@
                     <label>Guardian Phone</label>
                     {{ student_form.guardian_phone_no }}
                     <span id="guardian-phone-error" class="error"></span>
-                    {% if student_form.email.errors %}
+                    {% if student_form.guardian_phone_no.errors %}
                     <span class="error">
-                        {{ student_form.email.errors.0 }}
+                        {{ student_form.guardian_phone_no.errors.0 }}
                     </span>
                     {% endif %}
                 </div>
