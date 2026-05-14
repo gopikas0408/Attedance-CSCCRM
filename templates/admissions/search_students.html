@@ -59,9 +59,9 @@
     </div>
 
     <div class="form-btn">
-    <a href="{% url 'search_students' %}">
-    <button type="button">Reset</button>
-    </a>
+    <button type="button" class="clear-btn" id="resetBtn">
+        Reset
+       </button>
     <button type="submit">Filter</button>
     </div>
 
@@ -132,5 +132,32 @@
 </table>
 
 </div>
+
+<script>
+
+document.getElementById("resetBtn").addEventListener("click", function () {
+
+    // FORM
+    const form = document.querySelector(".top-bar");
+
+    // CLEAR INPUTS
+    form.querySelectorAll("input").forEach(function(input) {
+        input.value = "";
+    });
+
+    // RESET SELECTS
+    form.querySelectorAll("select").forEach(function(select) {
+        select.selectedIndex = 0;
+    });
+
+    // REMOVE URL PARAMS
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    // AUTO SUBMIT CLEAN FORM
+    form.submit();
+
+});
+
+</script>
 
 {% endblock %}

@@ -27,7 +27,7 @@ class Student(models.Model):
     first_name = models.CharField(max_length=20, blank=False, validators=[name_validator])
     last_name = models.CharField(max_length=20, blank=False, validators=[name_validator])
     dob = models.DateField()
-    phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator])
+    phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator], unique=True)
 
     gender_choice = [
         ('', 'Select Gender'),
@@ -37,11 +37,11 @@ class Student(models.Model):
     ]
     gender = models.CharField(max_length=10, choices=gender_choice)
 
-    email = models.EmailField(validators=[email_validator])
+    email = models.EmailField(validators=[email_validator],unique=True)
     address = models.TextField()
 
     guardian_name = models.CharField(max_length=100, blank=False, validators=[name_validator])
-    guardian_phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator])
+    guardian_phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator], unique=True)
     
     photo=models.ImageField(upload_to='student_photos/',null=True, blank=True)
     id_proof=models.FileField(upload_to='id_proofs/',null=True, blank=True)

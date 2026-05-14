@@ -17,6 +17,7 @@ from . services import get_fee_summary
 
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import JsonResponse
 # Create your views here.
 
 def home(request):
@@ -445,7 +446,10 @@ def edit_student(request, id):
 
         enrollment.save()
 
+        messages.success(request, "✅ Student details updated successfully")
+
         return redirect('student_list')
+        
 
     context = {
         'student': student,
@@ -505,4 +509,35 @@ def view_student(request, id):
         'total_paid': student.total_paid(),
         'pending': student.pending_amount(),
 
+    })
+
+
+
+def check_email(request):
+
+    email = request.GET.get('email')
+
+    exists = Student.objects.filter(
+        email=email
+    ).exists()
+
+    return JsonResponse({
+        'exists': exists
+    })
+
+def check_phone(request):
+
+    phone = request.GET.get('phone')
+
+    exists = Student.objects.filter(
+        phone_no=phone
+    ).exists()
+
+    guardian_exists = Student.objects.filter(
+        guardian_phone_no=phone
+    ).exists()
+
+    return JsonResponse({
+        'exists': exists,
+        'guardian_exists': guardian_exists
     })

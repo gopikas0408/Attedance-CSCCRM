@@ -14,5 +14,6 @@ urlpatterns = [
     path('delete_student/<int:id>/',views.delete_student,name='delete_student'),
     path('search_students/',views.search_students,name='search_students'),
     path('view_student/<int:id>/',views.view_student,name='view_student'),
-    
+    path('check-email/',views.check_email,name='check_email'),
+    path('check-phone/',views.check_phone,name='check_phone'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

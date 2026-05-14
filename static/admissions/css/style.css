@@ -63,6 +63,13 @@ body{
     color: rgb(255, 202, 43);
 }
 
+.nav-links li a.active{
+    color: rgb(255, 202, 43);
+    font-weight: bold;
+    border-bottom: 2px solid rgb(255, 202, 43);
+    padding-bottom: 5px;
+}
+
 .fa-house{
     font-size: 22px;
 }
@@ -89,6 +96,45 @@ body{
     background-color: rgb(30, 42, 120);
 }
 
+
+.message-container{
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 2000;
+}
+
+.alert{
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: bold;
+    min-width: 250px;
+
+    animation: fadeIn 0.4s ease;
+}
+
+.alert-success{
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger{
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 /* MOBILE VIEW */
 
 @media (max-width: 768px){

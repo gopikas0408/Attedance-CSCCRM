@@ -38,9 +38,10 @@
         </select>
 
         <div class="filter">
-        <a href="{% url 'student_list' %}">
-            <button type="button" id="btn2">Reset</button>
-        </a>
+        
+        <button type="button" class="clear-btn" id="resetBtn">
+        Reset
+       </button>
         <a href="#">
             <button type="submit" id="filter">Search</button>
         </a>
@@ -278,4 +279,30 @@ function validateFormat() {
 }
 </script>
 
+<script>
+
+document.getElementById("resetBtn").addEventListener("click", function () {
+
+    // FORM
+    const form = document.querySelector(".top-bar");
+
+    // CLEAR INPUTS
+    form.querySelectorAll("input").forEach(function(input) {
+        input.value = "";
+    });
+
+    // RESET SELECTS
+    form.querySelectorAll("select").forEach(function(select) {
+        select.selectedIndex = 0;
+    });
+
+    // REMOVE URL PARAMS
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    // AUTO SUBMIT CLEAN FORM
+    form.submit();
+
+});
+
+</script>
 {% endblock %}

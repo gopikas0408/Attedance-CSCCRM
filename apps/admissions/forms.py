@@ -65,12 +65,12 @@ class StudentForm(forms.ModelForm):
 
     def clean_phone_no(self):
         phone = self.cleaned_data.get('phone_no')
+        
+        if Student.objects.filter(phone_no=phone).exists():
 
-        if not phone.isdigit():
-            raise forms.ValidationError("Only numbers allowed")
-
-        if len(phone) != 10:
-            raise forms.ValidationError("Must be 10 digits")
+            raise forms.ValidationError(
+                "Phone number already exists"
+            )
 
         return phone
 
@@ -82,6 +82,29 @@ class StudentForm(forms.ModelForm):
             raise forms.ValidationError("DOB must be a past date!")
 
         return dob
+    
+    def clean_email(self):
+
+        email = self.cleaned_data.get('email')
+
+        if Student.objects.filter(email=email).exists():
+
+            raise forms.ValidationError(
+                "Email already exists"
+            )
+
+        return email
+    
+    def clean_guardian_phone_no(self):
+        phone = self.cleaned_data.get('guardian_phone_no')
+
+        if Student.objects.filter(phone_no=phone).exists():
+
+            raise forms.ValidationError(
+                "Phone number already exists"
+            )
+        
+        return phone
     
 class CourseForm(forms.ModelForm):
     class Meta:

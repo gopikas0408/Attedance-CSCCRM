@@ -594,5 +594,46 @@
 });
 </script>
 
+<script>
+
+    // NAME FIELDS
+    const nameFields = [
+        document.getElementsByName("first_name")[0],
+        document.getElementsByName("last_name")[0],
+        document.getElementsByName("guardian_name")[0]
+    ];
+
+    // TEXT ONLY
+    nameFields.forEach(function(input) {
+
+        input.addEventListener("input", function () {
+
+            this.value =
+                this.value.replace(/[^A-Za-z ]/g, '');
+
+        });
+
+    });
+
+    // PHONE FIELDS
+    const phoneFields = [
+        document.getElementsByName("phone_no")[0],
+        document.getElementsByName("guardian_phone_no")[0]
+    ];
+
+    // NUMBER ONLY
+    phoneFields.forEach(function(input) {
+
+        input.addEventListener("input", function () {
+
+            this.value =
+                this.value.replace(/[^0-9]/g, '');
+
+        });
+
+    });
+
+</script>
+
 
 {% endblock content %}
