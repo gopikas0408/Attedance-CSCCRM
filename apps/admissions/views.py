@@ -23,7 +23,6 @@ from django.http import JsonResponse
 def home(request):
     return render(request, 'admissions/home.html')
 
-
 def student(request):
 
     student_form = StudentForm()
@@ -60,12 +59,14 @@ def student(request):
 
                 enrollment.save()
 
-                # USER EMAIL
+                try:
 
-                send_mail(
-                    subject='🎓 Admission Confirmation - CSC Academy',
+                    # USER EMAIL
 
-                    message=f'''
+                    send_mail(
+                        subject='🎓 Admission Confirmation - CSC Academy',
+
+                        message=f'''
 Dear {student.first_name},
 
 Congratulations! 🎉
@@ -81,19 +82,19 @@ Best Regards,
 CSC Academy
 ''',
 
-                    from_email=settings.EMAIL_HOST_USER,
+                        from_email=settings.EMAIL_HOST_USER,
 
-                    recipient_list=[student.email],
+                        recipient_list=[student.email],
 
-                    fail_silently=False
-                )
+                        fail_silently=True
+                    )
 
-                # ADMIN EMAIL
+                    # ADMIN EMAIL
 
-                send_mail(
-                    subject='📌 New Student Admission Alert',
+                    send_mail(
+                        subject='📌 New Student Admission Alert',
 
-                    message=f'''
+                        message=f'''
 A new student admission has been registered.
 
 Student Details
@@ -110,12 +111,18 @@ Email  : {student.email}
 Please verify the records from the admin panel.
 ''',
 
-                    from_email=settings.EMAIL_HOST_USER,
+                        from_email=settings.EMAIL_HOST_USER,
 
-                    recipient_list=['admin@gmail.com'],
+                        recipient_list=['admin@gmail.com'],
 
-                    fail_silently=False
-                )
+                        fail_silently=True
+                    )
+
+                    print("MAIL SENT SUCCESS")
+
+                except Exception as e:
+
+                    print("MAIL ERROR:", e)
 
             messages.success(request, "Student enrolled successfully!")
 
