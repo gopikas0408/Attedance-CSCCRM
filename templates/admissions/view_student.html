@@ -47,12 +47,12 @@
             <p><i class="fa-solid fa-phone"></i> Phone: {{ student.phone_no }}</p>
             <p><i class="fa-solid fa-graduation-cap"></i> Course: {{ admission.course }}</p>
             <p><i class="fa-regular fa-id-badge"></i> Student ID: {{ student.id }}</p>
+            <p><i class="fa-regular fa-calendar"></i> Date of Birth: {{ student.dob }}</p>
         </div>
 
         <div class="line"></div>
 
         <div class="user-middle">
-            <p><i class="fa-regular fa-calendar"></i> Date of Birth: {{ student.dob }}</p>
             <p><i class="fa-solid fa-user"></i> Gender: {{ student.gender }}</p>
             <p><i class="fa-regular fa-calendar"></i> Admission Date: {{ enrollment.start_date }}</p>
             <p><i class="fa-solid fa-users"></i> Batch: {{ enrollment.batch }}</p>
@@ -70,6 +70,8 @@
                 <span class="unknown">Unknown</span>
                 {% endif %}
             </p>
+            <p><i class="fas fa-user-shield"></i> Guardian Name: {{ student.guardian_name }}</p>
+            <p><i class="fa-solid fa-phone"></i> Guardian Phone: {{ student.guardian_phone_no }}</p>
         </div>
 
 
