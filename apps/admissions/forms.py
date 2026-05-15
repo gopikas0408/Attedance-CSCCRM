@@ -25,6 +25,12 @@ def validate_document(file):
 
 class StudentForm(forms.ModelForm):
 
+    photo = forms.FileField(validators=[validate_image])
+
+    id_proof = forms.FileField(validators=[validate_document])
+
+    certificate = forms.FileField(validators=[validate_document])
+
     class Meta:
         model = Student
         fields = '__all__'

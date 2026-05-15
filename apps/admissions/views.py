@@ -18,6 +18,15 @@ from . services import get_fee_summary
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
+
+from openpyxl.styles import Font, PatternFill
+from openpyxl.styles import Alignment
+
+from reportlab.platypus import TableStyle
+from reportlab.lib import colors
+
+from reportlab.platypus import Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
 # Create your views here.
 
 def home(request):
@@ -335,7 +344,18 @@ def student_list(request):
     if format == 'excel':
         wb = Workbook()
         ws = wb.active
-        ws.append(["Student", "Course", "Batch", "Phone", "Payment Status", "Joined"])
+        ws.title = "Students"
+
+        headers = ["Student", "Course", "Batch", "Phone", "Payment Status", "Joined"]
+        ws.append(headers)
+
+        # HEADER STYLE
+        header_fill = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
+
+        for cell in ws[1]:
+            cell.font = Font(bold=True)
+            cell.fill = header_fill
+            cell.alignment = Alignment(horizontal="center")
 
         for s in filtered_students:
             for admission in s.admissions.all():
@@ -349,7 +369,18 @@ def student_list(request):
                     enrollment.payment_status if enrollment else "-",
                     str(enrollment.start_date) if enrollment else "-"
                 ])
+ 
+        column_widths = {
+    'A': 25,
+    'B': 20,
+    'C': 15,
+    'D': 18,
+    'E': 18,
+    'F': 18,
+}
 
+        for col, width in column_widths.items():
+            ws.column_dimensions[col].width = width
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
@@ -378,8 +409,31 @@ def student_list(request):
                 ])
 
         doc = SimpleDocTemplate(response)
+        styles = getSampleStyleSheet()
+        title = Paragraph("Student Report", styles['Title'])
+
         table = Table(data)
-        doc.build([table])
+        table.setStyle(TableStyle([
+
+    ('BACKGROUND', (0, 0), (-1, 0), colors.gold),
+    ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+
+    ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+
+    ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+
+]))
+        elements = [
+            title,
+            Spacer(1, 12),
+            table
+        ]
+        doc.build(elements)
 
         return response
 

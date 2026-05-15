@@ -12,7 +12,7 @@
 {% block content %}
 <div class="edit-container">
 
-    <form id="studentForm" method="POST" action="{% url 'student' %}" enctype="multipart/form-data">
+    <form id="studentForm" method="POST" action="{% url 'student' %}" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
         <!-- ================= PERSONAL INFO ================= -->
@@ -38,38 +38,22 @@
                     <label>Email</label>
                     {{ student_form.email }}
                     <span id="email-error" class="error"></span>
-                    {% if student_form.email.errors %}
-                    <span class="error">
-                        {{ student_form.email.errors.0 }}
-                    </span>
-                    {% endif %}
                 </div>
 
                 <div>
                     <label>Phone</label>
                     {{ student_form.phone_no }}
                     <span id="phone-error" class="error"></span>
-                    {% if student_form.phone_no.errors %}
-                    <span class="error">
-                        {{ student_form.phone_no.errors.0 }}
-                    </span>
-                    {% endif %}
                 </div>
 
                 <div>
                     <label>Date of Birth</label>
                     {{ student_form.dob }}
-                    {% if student_form.dob.errors %}
-                    <span class="error">{{ student_form.dob.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <div>
                     <label>Gender</label>
                     {{ student_form.gender }}
-                    {% if student_form.gender.errors %}
-                    <span class="error">{{ student_form.gender.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <div>
@@ -81,20 +65,12 @@
                     <label>Guardian Phone</label>
                     {{ student_form.guardian_phone_no }}
                     <span id="guardian-phone-error" class="error"></span>
-                    {% if student_form.guardian_phone_no.errors %}
-                    <span class="error">
-                        {{ student_form.guardian_phone_no.errors.0 }}
-                    </span>
-                    {% endif %}
                 </div>
             </div>
 
             <div class="address-grid">
                 <label>Address</label>
                 {{ student_form.address }}
-                {% if student_form.address.errors %}
-                <span class="error">{{ student_form.address.errors.0 }}</span>
-                {% endif %}
             </div>
 
         </div>
@@ -118,18 +94,11 @@
                         </option>
                         {% endfor %}
                     </select>
-
-                    {% if admission_form.course.errors %}
-                    <span class="error">{{ admission_form.course.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <div>
                     <label>Batch</label><br>
                     {{ enrollment_form.batch }}
-                    {% if enrollment_form.batch.errors %}
-                    <span class="error">{{ enrollment_form.batch.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <div>
@@ -151,9 +120,6 @@
                 <div>
                     <label>Payment Status</label><br>
                     {{ enrollment_form.payment_status }}
-                    {% if enrollment_form.payment_status.errors %}
-                    <span class="error">{{ enrollment_form.payment_status.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
             </div>
@@ -180,16 +146,19 @@
                 <div>
                     <label>📷 Student Photo</label>
                     {{ student_form.photo }}
+                    <span id="photo-error" class="error"></span>
                 </div>
 
                 <div>
                     <label>📄 ID Proof</label>
                     {{ student_form.id_proof }}
+                    <span id="idproof-error" class="error"></span>
                 </div>
 
                 <div>
                     <label>📜 Certificate</label>
                     {{ student_form.certificate }}
+                    <span id="certificate-error" class="error"></span>
                 </div>
             </div>
         </div>
@@ -212,6 +181,7 @@
 
         const form = document.getElementById("studentForm");
         // COURSE AUTO FILL
+
         const courseSelect = document.getElementById("id_course");
 
         courseSelect.addEventListener("change", function () {
@@ -238,6 +208,12 @@
         const guardianPhone = document.getElementsByName("guardian_phone_no")[0];
         const dob = document.getElementById("id_dob");
         const start_date = document.getElementById("id_start_date");
+        const gender = document.getElementById("id_gender");
+        const address = document.getElementById("id_address");
+        const course = document.getElementById("id_course");
+        const batch = document.getElementById("id_batch");
+
+
 
         // REGEX
         const nameRegex = /^[A-Za-z ]+$/;
@@ -252,6 +228,7 @@
             let error = document.createElement("span");
 
             error.className = "custom-error";
+
             error.style.color = "red";
             error.style.fontSize = "13px";
             error.style.display = "block";
@@ -259,20 +236,25 @@
 
             error.innerText = message;
 
-            input.parentElement.appendChild(error);
+            // APPEND INSIDE SAME FIELD CONTAINER
+            input.closest("div").appendChild(error);
         }
+
 
         // REMOVE ERROR
         function removeError(input) {
 
+            let parent = input.closest("div");
+
+            if (!parent) return;
+
             let oldError =
-                input.parentElement.querySelector(".custom-error");
+                parent.querySelector(".custom-error");
 
             if (oldError) {
                 oldError.remove();
             }
         }
-
         // VALIDATE FIELD
         function validateField(input, regex, emptyMsg, invalidMsg) {
 
@@ -291,6 +273,20 @@
             }
 
             removeError(input);
+
+            return true;
+        }
+
+        function validateSelect(input, message) {
+
+            removeError(input);
+
+            if (input.value.trim() === "") {
+
+                showError(input, message);
+
+                return false;
+            }
 
             return true;
         }
@@ -554,6 +550,40 @@
                 isValid = false;
             }
 
+            if (!validateSelect(
+                gender,
+                "Select gender"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateField(
+                address,
+                /.+/,
+                "Address is required",
+                ""
+            )) {
+                isValid = false;
+            }
+
+            if (!validateSelect(
+                course,
+                "Select course"
+            )) {
+                isValid = false;
+            }
+
+            if (!validateSelect(
+                batch,
+                "Select batch"
+            )) {
+                isValid = false;
+            }
+
+
+
+
+
             if (!validateDOB()) {
                 isValid = false;
             }
@@ -630,6 +660,144 @@
     startDateInput.addEventListener("click", function () {
 
         this.showPicker();
+
+    });
+
+</script>
+
+<script>
+
+    // FILE INPUTS
+    const photoInput = document.getElementById("id_photo");
+
+    const idProofInput =
+        document.getElementById("id_id_proof");
+
+    const certificateInput =
+        document.getElementById("id_certificate");
+
+
+    // VALIDATE IMAGE
+    function validateImage(input, errorId) {
+
+        const file = input.files[0];
+
+        const error =
+            document.getElementById(errorId);
+
+        error.innerText = "";
+
+        if (!file) return;
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/jpg",
+            "image/png"
+        ];
+
+        // TYPE CHECK
+        if (!allowedTypes.includes(file.type)) {
+
+            error.innerText =
+                "Only JPG, JPEG, PNG allowed";
+
+            input.value = "";
+
+            return;
+        }
+
+        // SIZE CHECK (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+
+            error.innerText =
+                "Image must be under 2MB";
+
+            input.value = "";
+
+            return;
+        }
+
+    }
+
+
+    // VALIDATE DOCUMENT
+    function validateDocument(input, errorId) {
+
+        const file = input.files[0];
+
+        const error =
+            document.getElementById(errorId);
+
+        error.innerText = "";
+
+        if (!file) return;
+
+        const allowedExtensions = [
+            ".pdf",
+            ".doc",
+            ".docx"
+        ];
+
+        const fileName =
+            file.name.toLowerCase();
+
+        const isValid =
+            allowedExtensions.some(ext =>
+                fileName.endsWith(ext)
+            );
+
+        // TYPE CHECK
+        if (!isValid) {
+
+            error.innerText =
+                "Only PDF, DOC, DOCX allowed";
+
+            input.value = "";
+
+            return;
+        }
+
+        // SIZE CHECK (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+
+            error.innerText =
+                "File must be under 5MB";
+
+            input.value = "";
+
+            return;
+        }
+
+    }
+
+
+    // EVENTS
+    photoInput.addEventListener("change", function () {
+
+        validateImage(
+            photoInput,
+            "photo-error"
+        );
+
+    });
+
+
+    idProofInput.addEventListener("change", function () {
+
+        validateDocument(
+            idProofInput,
+            "idproof-error"
+        );
+
+    });
+
+
+    certificateInput.addEventListener("change", function () {
+
+        validateDocument(
+            certificateInput,
+            "certificate-error"
+        );
 
     });
 

@@ -14,10 +14,10 @@
 <div class="edit-container">
 
     <!-- FILTER FORM -->
-    <form method="GET" class="top-bar">
+    <form method="GET" class="top-bar" id="filterForm">
 
         <input type="text" name="search" pattern="^[A-Za-z ]+$" value="{{ request.GET.search }}"
-            placeholder="Search name" required>
+            placeholder="Search name">
 
         <input type="text" name="id" pattern="^\d{1,5}$" value="{{ request.GET.id }}" placeholder="Search ID">
 
@@ -38,7 +38,8 @@
         </select>
 
         <div class="filter">
-        
+        <p id="search-error"></p>
+
         <button type="button" class="clear-btn" id="resetBtn">
         Reset
        </button>
@@ -48,7 +49,9 @@
         </div>
     </form>
 
+    <div class="total-count">
     Total Students: {{ total_students }}
+    </div>
 
     <!-- DOWNLOAD -->
     <div class="table-container">
@@ -58,26 +61,42 @@
         </a>
         </div>
         <div>
-        <form method="GET">
-            <div id="btn1">
+        <form method="GET" id="downloadForm">
 
-                <div class="format-box">
-                    <select name="format" id="format">
-                        <option value="">Select format</option>
-                        <option value="excel">Download Excel</option>
-                        <option value="pdf">Download PDF</option>
-                    </select>
+    <!-- KEEP FILTER VALUES -->
+    <input type="hidden" name="search" value="{{ request.GET.search }}">
+    <input type="hidden" name="id" value="{{ request.GET.id }}">
+    <input type="hidden" name="course" value="{{ request.GET.course }}">
+    <input type="hidden" name="batch" value="{{ request.GET.batch }}">
 
-                    <p id="error-msg"></p>
-                </div>
+    <div id="btn1">
 
-                <button type="submit" id="btn2" class="down" onclick="return validateFormat()">
-                    Download
-                </button>
+        <div class="format-box">
 
-            </div>
+            <select name="format" id="format">
 
-        </form>
+                <option value="">Select format</option>
+                <option value="excel">Download Excel</option>
+                <option value="pdf">Download PDF</option>
+
+            </select>
+
+            <p id="error-msg"></p>
+
+        </div>
+
+        <button type="submit"
+                id="btn2"
+                class="down"
+                onclick="return validateFormat()">
+
+            Download
+
+        </button>
+
+    </div>
+
+</form>
         </div>
     </div>
 
@@ -281,26 +300,90 @@ function validateFormat() {
 
 <script>
 
+const form = document.getElementById("filterForm");
+const error = document.getElementById("search-error");
+
+form.addEventListener("submit", function(e) {
+
+    const inputs = form.querySelectorAll("input");
+    const selects = form.querySelectorAll("select");
+
+    let hasValue = false;
+
+    // CHECK INPUTS
+    inputs.forEach(input => {
+        if (input.value.trim() !== "") {
+            hasValue = true;
+        }
+    });
+
+    // CHECK SELECTS
+    selects.forEach(select => {
+        if (select.value.trim() !== "") {
+            hasValue = true;
+        }
+    });
+
+    // ALL EMPTY
+    if (!hasValue) {
+
+        e.preventDefault();
+
+        error.innerText = "Enter at least one filter";
+        error.style.color = "red";
+
+    } else {
+
+        error.innerText = "";
+
+    }
+
+});
+
+
+// RESET
 document.getElementById("resetBtn").addEventListener("click", function () {
 
-    // FORM
-    const form = document.querySelector(".top-bar");
-
     // CLEAR INPUTS
-    form.querySelectorAll("input").forEach(function(input) {
+    form.querySelectorAll("input").forEach(input => {
         input.value = "";
     });
 
     // RESET SELECTS
-    form.querySelectorAll("select").forEach(function(select) {
+    form.querySelectorAll("select").forEach(select => {
         select.selectedIndex = 0;
     });
+
+    // CLEAR ERROR
+    error.innerText = "";
 
     // REMOVE URL PARAMS
     window.history.replaceState({}, document.title, window.location.pathname);
 
-    // AUTO SUBMIT CLEAN FORM
-    form.submit();
+    fetch(window.location.pathname)
+    .then(response => response.text())
+    .then(data => {
+
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(data, "text/html");
+
+        // TABLE UPDATE
+        document.querySelector(".table-wrapper").innerHTML =
+            doc.querySelector(".table-wrapper").innerHTML;
+
+        // TOTAL STUDENTS UPDATE
+        document.querySelector(".total-count").innerHTML =
+            doc.querySelector(".total-count").innerHTML;
+
+        // PAGINATION INFO UPDATE
+        document.querySelector(".pagination-info").innerHTML =
+            doc.querySelector(".pagination-info").innerHTML;
+
+        // PAGINATION BUTTONS UPDATE
+        document.querySelector(".pagination-buttons").innerHTML =
+            doc.querySelector(".pagination-buttons").innerHTML;
+
+    });
 
 });
 
