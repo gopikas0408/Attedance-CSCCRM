@@ -36,14 +36,12 @@ ALLOWED_HOSTS = ['.onrender.com','127.0.0.1', 'localhost']
 INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'apps.admissions',
 ]
 
@@ -134,10 +132,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
