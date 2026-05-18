@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 import dj_database_url
 import cloudinary
-import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,14 +34,16 @@ ALLOWED_HOSTS = ['.onrender.com','127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
+    'cloudinary',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary',
-    'cloudinary_storage',
+
     'apps.admissions',
 ]
 
@@ -138,8 +139,8 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -171,6 +172,13 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # EMAIL_HOST_PASSWORD = 'zhstehraaimwncpj'
 
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUD_NAME'),
+    api_key=os.environ.get('API_KEY'),
+    api_secret=os.environ.get('API_SECRET'),
+    secure=True
+)
 
 
 if not DEBUG:
