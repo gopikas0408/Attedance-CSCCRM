@@ -95,7 +95,7 @@ CSC Academy
 
                         recipient_list=[student.email],
 
-                        fail_silently=True
+                        fail_silently=False,
                     )
 
                     # ADMIN EMAIL
@@ -124,7 +124,7 @@ Please verify the records from the admin panel.
 
                         recipient_list=['admin@gmail.com'],
 
-                        fail_silently=True
+                        fail_silently=False,
                     )
 
                     print("MAIL SENT SUCCESS")
@@ -140,6 +140,7 @@ Please verify the records from the admin panel.
         else:
 
             messages.error(request, "Form has errors. Please check!")
+            print("FORM ERRORS :", student_form.errors)
 
     return render(request, 'admissions/register.html', {
         'student_form': student_form,

@@ -12,6 +12,12 @@
 {% block content %}
 <div class="edit-container">
 
+    {% if form.errors %}
+        <div style="color:red;">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
     <form id="studentForm" method="POST" action="{% url 'student' %}" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 

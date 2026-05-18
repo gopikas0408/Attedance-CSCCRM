@@ -25,11 +25,11 @@ def validate_document(file):
 
 class StudentForm(forms.ModelForm):
 
-    photo = forms.FileField(validators=[validate_image])
+    photo = forms.FileField(validators=[validate_image], required=False)
 
-    id_proof = forms.FileField(validators=[validate_document])
+    id_proof = forms.FileField(validators=[validate_document], required=False)
 
-    certificate = forms.FileField(validators=[validate_document])
+    certificate = forms.FileField(validators=[validate_document], required=False)
 
     class Meta:
         model = Student
@@ -49,6 +49,7 @@ class StudentForm(forms.ModelForm):
             'certificate': forms.FileInput(attrs={ 'accept': '.pdf,doc,.docx'}),
 
         }
+
     
     def clean_first_name(self):
         value = self.cleaned_data.get('first_name')
