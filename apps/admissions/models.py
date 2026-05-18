@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.core.validators import MinValueValidator 
 from decimal import Decimal
+from cloudinary.models import CloudinaryField
 
 
 name_validator = RegexValidator(
@@ -43,9 +44,9 @@ class Student(models.Model):
     guardian_name = models.CharField(max_length=100, blank=False, validators=[name_validator])
     guardian_phone_no = models.CharField(max_length=10, blank=False, validators=[phone_validator], unique=True)
     
-    photo=models.ImageField(upload_to='student_photos/',null=True, blank=True)
-    id_proof=models.FileField(upload_to='id_proofs/',null=True, blank=True)
-    certificate=models.FileField(upload_to='certificates/',null=True, blank=True)
+    photo=CloudinaryField('student_photos/',null=True, blank=True)
+    id_proof=CloudinaryField('id_proofs/',null=True, blank=True, resource_type='raw')
+    certificate=CloudinaryField('certificates/',null=True, blank=True, resource_type='raw')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
