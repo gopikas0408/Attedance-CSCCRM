@@ -211,26 +211,111 @@ def fee_dashboard(request):
         return redirect('fee_dashboard')
     # EXPORT EXCEL
     
+    # format = request.GET.get('format')
+
+    # if format == 'excel':
+    #     wb = Workbook()
+    #     ws = wb.active
+    #     ws.title = "Fee Payments"
+    #     ws.append(["Student", "Course", "Batch", "Amount", "Mode", "Reference", "Date"])
+    #     for payment in payments:
+    #         ws.append([
+    #             f"{payment.student.first_name} {payment.student.last_name}",
+    #             str(payment.date),
+    #             payment.mode,
+    #             payment.reference_id,
+    #             payment.remarks
+    #         ])
+    #     response = HttpResponse(
+    #         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    #     )
+    #     response['Content-Disposition'] = 'attachment; filename=fee_payments.xlsx'
+    #     wb.save(response)
+    #     return response
+    
+
+    # EXPORT EXCEL
+
     format = request.GET.get('format')
 
     if format == 'excel':
         wb = Workbook()
         ws = wb.active
         ws.title = "Fee Payments"
-        ws.append(["Student", "Course", "Batch", "Amount", "Mode", "Reference", "Date"])
+
+        # HEADERS
+        ws.append([
+        "Student",
+        "Course",
+        "Batch",
+        "Amount",
+        "Mode",
+        "Reference",
+        "Date"
+    ])
+
+        # HEADER STYLE
+        header_fill = PatternFill(
+        start_color="FFC000",
+        end_color="FFC000",
+        fill_type="solid"
+    )
+
+        for cell in ws[1]:
+            cell.font = Font(bold=True)
+            cell.fill = header_fill
+            cell.alignment = Alignment(horizontal="center")
+
+        # DATA
         for payment in payments:
-            ws.append([
-                f"{payment.student.first_name} {payment.student.last_name}",
-                str(payment.date),
-                payment.mode,
-                payment.reference_id,
-                payment.remarks
-            ])
-        response = HttpResponse(
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            admission = payment.student.admissions.first()
+
+            enrollment = (
+            admission.enrollment
+            if admission and hasattr(admission, 'enrollment')
+            else None
         )
-        response['Content-Disposition'] = 'attachment; filename=fee_payments.xlsx'
+
+            ws.append([
+            f"{payment.student.first_name} {payment.student.last_name}",
+
+            str(admission.course) if admission else "-",
+
+            str(enrollment.batch) if enrollment else "-",
+
+            payment.amount,
+
+            payment.mode,
+
+            payment.reference_id,
+
+            str(payment.date),
+        ])
+
+        # COLUMN WIDTH
+        column_widths = {
+        'A': 25,
+        'B': 25,
+        'C': 18,
+        'D': 15,
+        'E': 15,
+        'F': 20,
+        'G': 18,
+    }
+
+        for col, width in column_widths.items():
+            ws.column_dimensions[col].width = width
+
+        response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+        response['Content-Disposition'] = (
+        'attachment; filename=fee_payments.xlsx'
+    )
+
         wb.save(response)
+
         return response
 
        
