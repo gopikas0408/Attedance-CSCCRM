@@ -221,10 +221,10 @@ def fee_dashboard(request):
         paid_amount = student.total_paid()
         pending_amount = total_fee - paid_amount
 
-        remaining = 2 - payment_count
+        remaining = 3 - payment_count
 
         if payment_count >= 3:
-            messages.error(request, "Only 2 payments allowed.")
+            messages.error(request, "Only 3 payments allowed.")
             return redirect('fee_dashboard')
         
         # 3rd payment must be full balance
@@ -284,7 +284,7 @@ def fee_dashboard(request):
             cell.alignment = Alignment(horizontal="center")
 
         # DATA
-        for payment in payments:
+        for payment in Payment.objects.select_related('student').order_by('-date', '-id'):
             admission = payment.student.admissions.first()
 
             enrollment = (
