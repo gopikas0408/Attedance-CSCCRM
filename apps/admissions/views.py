@@ -140,7 +140,7 @@ Please verify the records from the admin panel.
         else:
 
             messages.error(request, "Form has errors. Please check!")
-            print("FORM ERRORS :", student_form.errors)
+            print("FORM ERRORS :", student_form.errors, admission_form.errors, enrollment_form.errors)
 
     return render(request, 'admissions/register.html', {
         'student_form': student_form,
@@ -154,7 +154,27 @@ def fee_dashboard(request):
 
     students = Student.objects.all().order_by('-id')
 
-    payments = Payment.objects.order_by('-date')
+    fee_students = []
+ 
+    for student in students:
+        
+        if student.pending_amount() > 0:
+            fee_students.append(student)
+
+    latest_payments = []
+
+    seen_students = set()
+
+    for payment in Payment.objects.order_by('-date', '-id'):
+        
+        if payment.student.id not in seen_students:
+            latest_payments.append(payment)
+
+            seen_students.add(payment.student.id)
+
+        if len(latest_payments) == 5:
+            break
+
 
     # SAVE PAYMENT
     if request.method == 'POST':
@@ -194,6 +214,26 @@ def fee_dashboard(request):
                 f"only remaining amount ₹{pending_amount} can be paid. "
             )
             return redirect('fee_dashboard')
+        
+        payment_count = Payment.objects.filter(student=student).count()
+
+        total_fee = student.total_fee()
+        paid_amount = student.total_paid()
+        pending_amount = total_fee - paid_amount
+
+        remaining = 2 - payment_count
+
+        if payment_count >= 3:
+            messages.error(request, "Only 2 payments allowed.")
+            return redirect('fee_dashboard')
+        
+        # 3rd payment must be full balance
+        if payment_count == 2 and remaining == 0:
+            if amount != pending_amount:
+                messages.error(
+                           request,f"3rd payment must be full remaining ₹{pending_amount}"
+                )
+                return redirect('fee_dashboard')
 
         Payment.objects.create(
             student_id=student_id,
@@ -205,33 +245,10 @@ def fee_dashboard(request):
 
         messages.success(
             request,
-            "Payment Added Successfully"
+            f"Payment Successful! Remaining payments: {remaining}"
         )
 
         return redirect('fee_dashboard')
-    # EXPORT EXCEL
-    
-    # format = request.GET.get('format')
-
-    # if format == 'excel':
-    #     wb = Workbook()
-    #     ws = wb.active
-    #     ws.title = "Fee Payments"
-    #     ws.append(["Student", "Course", "Batch", "Amount", "Mode", "Reference", "Date"])
-    #     for payment in payments:
-    #         ws.append([
-    #             f"{payment.student.first_name} {payment.student.last_name}",
-    #             str(payment.date),
-    #             payment.mode,
-    #             payment.reference_id,
-    #             payment.remarks
-    #         ])
-    #     response = HttpResponse(
-    #         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    #     )
-    #     response['Content-Disposition'] = 'attachment; filename=fee_payments.xlsx'
-    #     wb.save(response)
-    #     return response
     
 
     # EXPORT EXCEL
@@ -358,8 +375,8 @@ def fee_dashboard(request):
         })
 
     context = {
-        'students': students,
-        'payments': payments,
+        'students': fee_students,
+        'payments': latest_payments,
         'summary': summary,
         'student_fee_status': student_fee_status
     }
@@ -387,16 +404,65 @@ def student_detail(request, pk):
 
 # pdf view ========
 def generate_receipt(request, pk):
+
     payment = Payment.objects.get(id=pk)
 
-    template = get_template('admissions/fee_receipt.html')
-    html = template.render({'payment': payment})
+    admission = payment.student.admissions.first()
 
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'filename="receipt_{pk}.pdf"'
+    enrollment = (
+        admission.enrollment
+        if admission and hasattr(admission, 'enrollment')
+        else None
+    )
+
+    context = {
+
+        'payment': payment,
+
+        'student_name':
+        f"{payment.student.first_name} {payment.student.last_name}",
+
+        'phone':
+        payment.student.phone_no,
+
+        'email':
+        payment.student.email,
+
+        'course':
+        admission.course if admission else "-",
+
+        'batch':
+        enrollment.batch if enrollment else "-",
+
+        'total_fee':
+        payment.student.total_fee(),
+
+        'total_paid':
+        payment.student.total_paid(),
+
+        'pending':
+        payment.student.pending_amount(),
+
+    }
+
+    template = get_template(
+        'admissions/fee_receipt.html'
+    )
+
+    html = template.render(context)
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = (
+        f'filename="receipt_{pk}.pdf"'
+    )
 
     pisa.CreatePDF(html, dest=response)
+
     return response
+
 
 def student_list(request):
 
@@ -685,3 +751,17 @@ def check_phone(request):
         'exists': exists,
         'guardian_exists': guardian_exists
     })
+
+#preview pdf
+    
+def preview_receipt(request, pk):
+
+    payment = Payment.objects.get(id=pk)
+
+    return render(
+        request,
+        'admissions/preview_receipt.html',
+        {
+            'payment': payment
+        }
+    )

@@ -149,4 +149,4 @@ class EnrollmentForm(forms.ModelForm):
 
     class Meta:
         model = Enrollment
-        fields = ['batch', 'start_date', 'payment_status']
+        fields = ['batch', 'start_date']

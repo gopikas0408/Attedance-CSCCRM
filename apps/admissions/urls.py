@@ -16,4 +16,5 @@ urlpatterns = [
     path('view_student/<int:id>/',views.view_student,name='view_student'),
     path('check-email/',views.check_email,name='check_email'),
     path('check-phone/',views.check_phone,name='check_phone'),
+    path('preview_receipt/<int:pk>/', views.preview_receipt, name='preview_receipt'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
