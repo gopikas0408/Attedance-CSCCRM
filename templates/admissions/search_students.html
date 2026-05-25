@@ -101,14 +101,28 @@
                 </span>
 
             <td>
-                {% if e %}
-                <span class="badge {{ e.payment_status|lower }}">
-                    {{ e.payment_status }}
+                {% if student.pending_amount <= 0 %}
+                
+                <span class="badge paid">
+                    Paid
                 </span>
+
+                {% elif student.total_paid > 0 %}
+
+                <span class="badge partial">
+                    Partial
+                </span>
+
                 {% else %}
-                -
+
+                <span class="badge pending">
+                    Pending
+                </span>
+
                 {% endif %}
+
             </td>
+                
 
         
             <td>
