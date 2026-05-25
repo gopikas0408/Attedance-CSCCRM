@@ -93,8 +93,9 @@
 
                             {% for s in students %}
 
-                            <option value="{{ s.id }}">
+                            <option value="{{ s.id }}" {% if selected_student_id == s.id|stringformat:"s" %} selected {% endif %}>
 
+                                STU{{ s.id }} -
                                 {{ s.first_name }}
                                 {{ s.last_name }}
 
@@ -112,7 +113,8 @@
                             Amount
                         </label>
 
-                        <input type="number" name="amount" id="amount" class="form-control" placeholder="Amount" min="1" required>
+                        <input type="number" name="amount" id="amount" class="form-control" placeholder="Amount" min="1"
+                            required>
 
                         <small id="amount-error" style="color:red;"></small>
 
@@ -218,6 +220,7 @@
                             <tr>
 
                                 <th>Student</th>
+                                <th>ID</th>
                                 <th>Date</th>
                                 <th>Amount</th>
                                 <th>Mode</th>
@@ -236,6 +239,10 @@
                                 <td>
                                     {{ p.student.first_name }}
                                     {{ p.student.last_name }}
+                                </td>
+
+                                <td>
+                                    STU{{ p.student.id }}
                                 </td>
 
                                 <td>
@@ -315,11 +322,12 @@
 
                             <tr>
 
-                                <th>Student</th>
+                                <th>Student Name & ID</th>
                                 <th>Total Fee</th>
                                 <th>Paid</th>
                                 <th>Pending</th>
                                 <th>Status</th>
+                                <th class="text-center">Add new payment</th>
 
                             </tr>
 
@@ -333,7 +341,7 @@
 
                                 <td>
                                     {{ item.student.first_name }}
-                                    {{ item.student.last_name }}
+                                    {{ item.student.last_name }} - STU{{ item.student.id }}
                                 </td>
 
                                 <td>
@@ -371,6 +379,12 @@
                                     {% endif %}
 
                                 </td>
+                                <td class="text-center">
+ 
+    <a href="{% url 'fee_dashboard' %}?student_id={{ item.student.id }}" class="btn btn-success btn-sm">
+    <i class="fas fa-plus"></i></a>
+    </td>
+ 
 
                             </tr>
 

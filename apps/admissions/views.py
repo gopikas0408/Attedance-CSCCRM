@@ -175,64 +175,55 @@ def fee_dashboard(request):
         if len(latest_payments) == 5:
             break
 
+    selected_student_id = request.GET.get('student_id')
+
+    remaining_payments = 0
 
     # SAVE PAYMENT
     if request.method == 'POST':
-
         student_id = request.POST.get('student')
 
         amount = request.POST.get('amount')
+
         try:
             amount = float(amount)
         except:
             messages.error(request, "Invalid amount")
             return redirect('fee_dashboard')
 
-
-
         mode = request.POST.get('mode')
 
         reference = request.POST.get('reference')
 
         remarks = request.POST.get('remarks')
-        
+
         student = Student.objects.get(id=student_id)
 
         total_fee = student.total_fee()
         paid_amount = student.total_paid()
         pending_amount = total_fee - paid_amount
-        
+
         # negative check
         if amount <= 0:
             messages.error(request, "Amount must be greater than 0.")
             return redirect('fee_dashboard')
-        
-        #exceed amount check
+
+        # exceed amount check
         if amount > pending_amount:
-            messages.error(
-                request,
-                f"only remaining amount ₹{pending_amount} can be paid. "
-            )
+            messages.error(request,f"Only remaining amount ₹{pending_amount} can be paid.")
             return redirect('fee_dashboard')
-        
+
         payment_count = Payment.objects.filter(student=student).count()
 
-        total_fee = student.total_fee()
-        paid_amount = student.total_paid()
-        pending_amount = total_fee - paid_amount
-
-        remaining = 3 - payment_count
-
-        if payment_count >= 3:
-            messages.error(request, "Only 3 payments allowed.")
+        # only 6 payments allowed
+        if payment_count >= 6:
+            messages.error(request, "Only 6 payments allowed.")
             return redirect('fee_dashboard')
-        
-        # 3rd payment must be full balance
-        if payment_count == 2 and remaining == 0:
+
+        # if this is going to be the 3rd payment
+        if payment_count == 5:
             if amount != pending_amount:
-                messages.error(
-                           request,f"3rd payment must be full remaining ₹{pending_amount}"
-                )
+                messages.error(request,f"6th payment must clear full remaining amount ₹{pending_amount}")
                 return redirect('fee_dashboard')
 
         Payment.objects.create(
@@ -243,10 +234,10 @@ def fee_dashboard(request):
             remarks=remarks
         )
 
-        messages.success(
-            request,
-            f"Payment Successful! Remaining payments: {remaining}"
-        )
+        remaining_payments = 6 - (payment_count + 1)
+
+        messages.success(request,f"Payment Successful! Remaining payments: {remaining_payments}")
+    
 
         return redirect('fee_dashboard')
     
@@ -378,7 +369,9 @@ def fee_dashboard(request):
         'students': fee_students,
         'payments': latest_payments,
         'summary': summary,
-        'student_fee_status': student_fee_status
+        'remaining_payments': remaining_payments,
+        'student_fee_status': student_fee_status,
+        'selected_student_id': selected_student_id,
     }
 
     return render(
@@ -397,7 +390,7 @@ def student_detail(request, pk):
         'student': student,
         'payments': payments,
         'total_paid': student.total_paid(),
-        'pending': student.pending_amount()
+        'pending': student.pending_amount(),
     }
 
     return render(request, 'students/detail.html', context)
