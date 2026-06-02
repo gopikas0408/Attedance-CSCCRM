@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+
+}
+
+body{
+
+    background:#f5f7fb;
+    overflow-x:hidden;
+
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+
+    width:260px;
+    height:100vh;
+    background:#0f172a;
+    position:fixed;
+    left:0;
+    top:0;
+    padding:24px 18px;
+
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-section{
+
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:45px;
+
+}
+
+.logo-box{
+
+    width:52px;
+    height:52px;
+    border-radius:16px;
+    background:#2563eb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:22px;
+
+}
+
+.logo-section h3{
+
+    color:white;
+    font-size:20px;
+    margin:0;
+    font-weight:700;
+
+}
+
+.logo-section p{
+
+    color:#94a3b8;
+    font-size:10px;
+    margin:0;
+    letter-spacing:1px;
+
+}
+
+
+/* =========================
+   MENU TITLE
+========================= */
+
+.menu-title{
+
+    color:#64748b;
+    font-size:11px;
+    margin-bottom:14px;
+    display:block;
+    letter-spacing:1px;
+
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.sidebar-menu{
+
+    list-style:none;
+    padding-left:0;
+
+}
+
+.sidebar-menu li{
+
+    margin-bottom:8px;
+
+}
+
+.sidebar-menu a{
+
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    padding:13px 15px;
+    border-radius:14px;
+    transition:0.3s;
+    font-size:14px;
+    font-weight:500;
+    position:relative;
+
+}
+
+.sidebar-menu a i{
+
+    font-size:16px;
+
+}
+
+.sidebar-menu a:hover{
+
+    background:#1e293b;
+    color:white;
+
+}
+
+
+/* =========================
+   ACTIVE MENU
+========================= */
+
+.sidebar-menu .active{
+
+    background:#1d4ed8;
+    color:white !important;
+
+}
+
+
+/* =========================
+   ALERT COUNT
+========================= */
+
+.alert-count{
+
+    margin-left:auto;
+    background:#ef4444;
+    color:white;
+    font-size:10px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main-content{
+
+    margin-left:260px;
+    padding:28px;
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:992px){
+
+    .sidebar{
+
+        width:100%;
+        height:auto;
+        position:relative;
+
+    }
+
+    .main-content{
+
+        margin-left:0;
+
+    }
+
+}

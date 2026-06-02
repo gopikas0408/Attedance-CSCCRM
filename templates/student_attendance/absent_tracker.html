@@ -1,0 +1,693 @@
+{% extends 'student_attendance/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'student_attendance/css/absent_tracker.css' %}">
+
+
+<!-- TOP HEADER -->
+
+<div class="top-header">
+
+    <div>
+
+        <h1>
+
+            Absence Management & Safety Tracking
+
+        </h1>
+
+        <p>
+
+            Monitor patterns of consecutive absences and coordinate notifications to parents or coordinators.
+
+        </p>
+
+    </div>
+
+    <div class="top-right">
+
+        <span class="live-sync">
+
+            <span class="dot"></span>
+
+            Live Sync Active
+
+        </span>
+
+        <div class="notification-icon">
+
+            <i class="bi bi-bell"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- TRACKER CARD -->
+
+<div class="tracker-container">
+
+
+    <!-- CARD HEADER -->
+
+    <div class="tracker-header">
+
+        <div class="critical-title">
+
+            <i class="bi bi-exclamation-octagon-fill"></i>
+
+            <h3>
+
+                Critical Attendance Cases (>3 Consecutive Absences)
+
+            </h3>
+
+        </div>
+
+        <span class="alert-badge">
+
+            {{ absent_students.count }} Active Alerts
+
+        </span>
+
+    </div>
+    <div class="filter-container">
+
+        <input type="text" id="studentNameFilter" placeholder="Student Name" class="filter-input">
+
+        <input type="text" id="studentIdFilter" placeholder="Student ID" class="filter-input">
+
+        <select id="courseFilter" class="filter-select">
+            <option value="">Course</option>
+            <option value="MERN">MERN</option>
+            <option value="PYTHON">PYTHON</option>
+            <option value="JAVA">JAVA</option>
+            <option value="MEAN">MEAN</option>
+            <option value="UI/UX">UI/UX</option>
+        </select>
+
+        <select id="batchFilter" class="filter-select">
+            <option value="">Batch</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+
+        <input type="text" id="phoneFilter" placeholder="Phone Number" class="filter-input">
+
+        <input type="text" id="emailFilter" placeholder="Email ID" class="filter-input">
+
+        <select id="statusFilter" class="filter-select">
+
+            <option value="">
+                Alert Status
+            </option>
+
+            <option value="critical">
+                Critical
+            </option>
+
+            <option value="medium">
+                Medium
+            </option>
+
+            <option value="low">
+                Low
+            </option>
+
+        </select>
+        <button id="clearFilters" class="clear-btn">
+
+            <i class="bi bi-x-circle"></i>
+            Clear
+
+        </button>
+
+    </div>
+
+
+
+    <!-- TABLE -->
+
+    <div class="table-responsive">
+
+        <table class="attendance-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+
+                        Student Details
+
+                    </th>
+                    <th>Course</th>
+
+
+                    <th>
+
+                        Batch
+
+                    </th>
+
+                    <th>
+
+                        Consecutive Absences
+
+                    </th>
+                    <th>Absent Days</th>
+
+                    <th>
+
+                        Observation Notes
+
+                    </th>
+
+                    <th>
+
+                        Notification Status
+
+                    </th>
+
+                    <th>
+
+                        Action Panel
+
+                    </th>
+                    <th>Admin Notes</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for tracker in absent_students %}
+
+                <tr class="student-row" data-name="{{ tracker.student.name|lower }}"
+                    data-id="{{ tracker.student.student_id|lower }}" data-course="{{ tracker.student.course|lower }}"
+                    data-batch="{{ tracker.student.batch|lower }}" data-phone="{{ tracker.student.phone_number|lower }}"
+                    data-email="{{ tracker.student.email|lower }}" data-status="{{ tracker.alert_level|lower }}">
+
+                    <!-- STUDENT -->
+
+                    <td>
+
+                        <div class="student-info">
+
+                            <div class="student-avatar">
+
+                                <i class="bi bi-person"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h6>
+
+                                    {{ tracker.student.name }}
+
+                                </h6>
+
+                                <small>
+
+                                    Ph:
+                                    {{ tracker.student.phone_number }}
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+
+                    <!-- BATCH -->
+
+                    <td>
+
+                        <span class="batch-pill">
+
+                            {{ tracker.student.course }}
+
+                        </span>
+
+                    </td>
+                    <td>
+
+                        <span class="batch-pill">
+
+                            {{ tracker.student.batch }}
+
+                        </span>
+
+                    </td>
+
+
+
+                    <!-- ABSENCE -->
+
+                    <td>
+
+                        <span class="absence-pill">
+
+                            {{ tracker.consecutive_absences }} Days
+
+                        </span>
+
+                    </td>
+                    <td>
+                        <span class="days-badge total-days">
+                            {{ tracker.total_absences }} Days
+                        </span>
+                    </td>
+
+
+
+                    <!-- OBSERVATION -->
+
+                    <td>
+
+                        <div class="observation-box">
+
+                            <input type="text" required class="form-control observation-input"
+                                placeholder="Add observation..." value="{{ tracker.observation_notes }}">
+
+                            <button class="save-btn">
+
+                                <i class="bi bi-check-lg"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+
+
+
+
+
+
+                    <!-- STATUS -->
+
+                    <td class="notification-cell">
+
+                        {% if tracker.notification_sent %}
+
+                        <span class="status-badge dispatched">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Dispatched
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="status-badge pending">
+
+                            <i class="bi bi-hourglass-split"></i>
+
+                            SMS Pending
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+
+                    <!-- ACTION -->
+
+
+                    <td>
+
+                        {% if tracker.notification_sent %}
+
+                        <button class="renotify-btn notify-action-btn" data-id="{{ tracker.id }}">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                            Re-notify
+
+                        </button>
+
+
+
+                        {% else %}
+
+                        <button class="notify-btn notify-action-btn" data-id="{{ tracker.id }}">
+
+                            <i class="bi bi-chat-left-text"></i>
+
+                            Notify Student
+
+                        </button>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- ADMIN NOTES -->
+
+                    <td>
+
+                        <div class="admin-notes">
+
+                            <input type="text" class="form-control" placeholder="Add admin notes..."
+                                value="{{ tracker.admin_notes|default_if_none:'' }}">
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7">
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <h5>
+
+                                No Critical Alerts Found
+
+                            </h5>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div id="smsToast" class="sms-toast"></div>
+
+
+
+<!-- JS -->
+
+
+<script>
+
+    document.addEventListener(
+
+        "DOMContentLoaded",
+
+        function () {
+
+            const notifyButtons = document.querySelectorAll(
+
+                ".notify-action-btn"
+
+            );
+
+            notifyButtons.forEach(
+
+                function (button) {
+
+                    button.addEventListener(
+
+                        "click",
+
+                        function () {
+
+                            // PREVENT MULTIPLE CLICKS
+
+                            button.disabled = true;
+
+                            // LOADING STATE
+
+                            button.innerHTML = `
+
+                            <span class="spinner-border spinner-border-sm"></span>
+
+                            Sending...
+
+                        `;
+
+                            // SIMULATE REAL-TIME API
+
+                            setTimeout(function () {
+
+                                // BUTTON STYLE CHANGE
+
+                                button.classList.remove(
+
+                                    "notify-btn"
+
+                                );
+
+                                button.classList.add(
+
+                                    "renotify-btn"
+
+                                );
+
+                                // BUTTON TEXT CHANGE
+
+                                button.innerHTML = `
+
+                                <i class="bi bi-arrow-repeat"></i>
+
+                                Re-notify
+
+                            `;
+                                showToast(
+                                    " Student Re-notification Sent Successfully"
+                                );
+
+                                // ENABLE AGAIN
+
+                                button.disabled = false;
+
+                                // STATUS BADGE UPDATE
+
+                                const row = button.closest("tr");
+
+                                const statusBadge = row.querySelector(
+
+                                    ".status-badge"
+                                );
+
+                                statusBadge.classList.remove(
+
+                                    "pending"
+                                );
+
+                                statusBadge.classList.add(
+
+                                    "dispatched"
+                                );
+
+                                statusBadge.innerHTML = `
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Dispatched
+
+                            `;
+
+                                // SUCCESS MESSAGE
+
+                                showToast(
+                                    " Student SMS Alert Queued Successfully"
+                                );
+
+                            }, 1500);
+
+                        }
+
+                    );
+
+                }
+
+            );
+
+        }
+
+    );
+    //filter
+
+    function applyFilters() {
+
+        const name =
+            document.getElementById(
+                "studentNameFilter"
+            ).value.toLowerCase();
+
+        const studentId =
+            document.getElementById(
+                "studentIdFilter"
+            ).value.toLowerCase();
+
+        const batch =
+            document.getElementById(
+                "batchFilter"
+            ).value.toLowerCase();
+
+        const course =
+            document.getElementById(
+                "courseFilter"
+            ).value.toLowerCase();
+
+        const phone =
+            document.getElementById(
+                "phoneFilter"
+            ).value.toLowerCase();
+
+        const email =
+            document.getElementById(
+                "emailFilter"
+            ).value.toLowerCase();
+
+        const status =
+            document.getElementById(
+                "statusFilter"
+            ).value.toLowerCase();
+
+        document.querySelectorAll(
+            ".student-row"
+        ).forEach(row => {
+
+            const show =
+
+                (name === "" ||
+                    row.dataset.name
+                        .toLowerCase()
+                        .startsWith(name)) &&
+
+                (studentId === "" ||
+                    row.dataset.id
+                        .toLowerCase()
+                        .startsWith(studentId)) &&
+                (course === "" ||
+                    row.dataset.course
+                        .toLowerCase()
+                        .includes(course)) &&
+
+                (batch === "" ||
+                    row.dataset.batch
+                        .toLowerCase()
+                        .includes(batch)) &&
+
+                (phone === "" ||
+                    row.dataset.phone
+                        .toLowerCase()
+                        .startsWith(phone)) &&
+
+                (email === "" ||
+                    row.dataset.email
+                        .toLowerCase()
+                        .includes(email)) &&
+
+                (status === "" ||
+                    row.dataset.status
+                        .toLowerCase() === status);
+
+            row.style.display =
+                show ? "" : "none";
+
+        });
+
+    }
+
+    document.querySelectorAll(
+        ".filter-input, .filter-select"
+    ).forEach(input => {
+
+        input.addEventListener(
+            "keyup",
+            applyFilters
+        );
+
+        input.addEventListener(
+            "change",
+            applyFilters
+        );
+
+    });
+    document.getElementById(
+        "clearFilters"
+    ).addEventListener(
+        "click",
+        function () {
+
+            document.querySelectorAll(
+                ".filter-input"
+            ).forEach(input => {
+
+                input.value = "";
+
+            });
+
+            document.getElementById(
+                "statusFilter"
+            ).value = "";
+            
+            document.getElementById(
+                "courseFilter"
+            ).value = "";
+            document.getElementById(
+                "batchFilter"
+            ).value = "";
+
+            applyFilters();
+
+            
+
+        }
+    );
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById(
+                "smsToast"
+            );
+
+        toast.innerHTML = message;
+
+        toast.style.display = "block";
+
+        setTimeout(() => {
+
+            toast.style.display = "none";
+
+        }, 3000);
+
+    }
+
+</script>
+
+
+
+
+
+{% endblock %}

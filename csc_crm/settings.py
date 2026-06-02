@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.admissions',
+    'apps.student_attendance',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.student_attendance.context_processors.sidebar_counts',
             ],
         },
     },
@@ -85,15 +87,26 @@ WSGI_APPLICATION = 'csc_crm.wsgi.application'
 #    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 # }
 
+#DATABASES = {
+  #  'default': {
+   #     'ENGINE': 'django.db.backends.postgresql',
+    #    'NAME': 'CSC_CRM',
+     #   'USER' :'postgres',
+      #  'PASSWORD' :'suba',
+       # 'HOST' :'localhost',
+        #'PORT' :'5432',
+   # }
+#}
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'CSC_CRM',
-        'USER' :'postgres',
-        'PASSWORD' :'suba',
-        'HOST' :'localhost',
-        'PORT' :'5432',
+
+        'ENGINE': 'django.db.backends.sqlite3',
+
+        'NAME': BASE_DIR / 'db.sqlite3',
+
     }
+
 }
 
 
@@ -156,9 +169,11 @@ EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+#EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+#EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = "gopikas04082005@gmail.com"
+EMAIL_HOST_PASSWORD = "ixqmfouunkhegpbq"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
@@ -177,3 +192,6 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('API_SECRET'),
 }
 
+TWILIO_ACCOUNT_SID = "xxxxxxxx"
+TWILIO_AUTH_TOKEN = "xxxxxxxx"
+TWILIO_PHONE_NUMBER = "+123456789"

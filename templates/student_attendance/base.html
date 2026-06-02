@@ -1,0 +1,205 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+
+        CSC CRM
+
+    </title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- BASE CSS -->
+
+    <link rel="stylesheet"
+          href="{% static 'student_attendance/css/base.css' %}">
+
+</head>
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+
+    <!-- LOGO -->
+
+    <div>
+
+        <div class="logo-section">
+
+            <div class="logo-box">
+
+                <i class="bi bi-mortarboard-fill"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+
+                    AcademicCRM
+
+                </h3>
+
+                <p>
+
+                    TRAINING INSTITUTE
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MENU TITLE -->
+
+        <small class="menu-title">
+
+            ANALYTICS
+
+        </small>
+
+
+
+        <!-- MENU -->
+
+        <ul class="sidebar-menu">
+
+
+            <!-- ABSENT TRACKER -->
+
+            <li>
+
+                <a href="/attendance/absent-tracker/"
+
+                   class="{% if request.path == '/attendance/absent-tracker/' %}active{% endif %}">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    Absent Tracker
+
+                </a>
+
+            </li>
+
+
+
+            <!-- LOW ATTENDANCE -->
+
+            <li>
+
+                <a href="/attendance/low-attendance/"
+
+                   class="{% if request.path == '/attendance/low-attendance/' %}active{% endif %}">
+
+                    <i class="bi bi-bell-fill"></i>
+
+                    Low Attendance Alerts
+
+                    <span class="alert-count">
+
+                        {{ low_attendance_count }}
+
+                    </span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- REPORTS -->
+
+            <li>
+
+                <a href="/attendance/reports/"
+
+                   class="{% if request.path == '/attendance/reports/' %}active{% endif %}">
+
+                    <i class="bi bi-bar-chart-fill"></i>
+
+                    Reports & Analytics
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+
+
+    <!-- PROFILE -->
+
+    <div class="profile-card">
+
+        <div class="profile-avatar">
+
+            AK
+
+        </div>
+
+        <div>
+
+            <h6>
+
+                Akash A
+
+            </h6>
+
+            <span>
+
+                Team Lead
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+    {% block content %}
+
+    {% endblock %}
+
+</div>
+
+
+
+<!-- Bootstrap JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
