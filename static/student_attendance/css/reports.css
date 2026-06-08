@@ -97,11 +97,13 @@ body{
     transition:0.3s;
     cursor:pointer;
     color:white;
+    text-decoration: none !important; 
 
 }
 
 .export-btn:hover{
 
+    text-decoration: none !important;
     transform:translateY(-2px);
 
 }
@@ -199,6 +201,48 @@ canvas{
     max-height:100% !important;
 
 }
+.table-responsive{
+    overflow-x:auto;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+.attendance-info-banner {
+
+    background: #e0f2fe;
+
+    border-left: 4px solid #0284c7;
+
+    color: #0f172a;
+
+    padding: 14px 18px;
+
+    border-radius: 8px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+}
+
+.attendance-info-banner i {
+
+    margin-right: 8px;
+
+}
+
+.attendance-info-banner.success {
+
+    background: #dcfce7;
+
+    border-left: 4px solid var(--success);
+
+    color: var(--success);
+
+}
+
 
 
 /* =========================

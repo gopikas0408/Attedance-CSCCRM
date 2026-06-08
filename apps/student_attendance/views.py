@@ -8,6 +8,23 @@ from .models import Student, Attendance, AbsentTracker
 from .services import update_absent_tracker
 from django.db.models import Count
 from django.utils import timezone
+from django.http import HttpResponse
+from openpyxl import Workbook
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle,
+    Paragraph,
+    Spacer
+)
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import (
+    landscape,
+    letter
+)
+from reportlab.lib.styles import getSampleStyleSheet
+from django.http import JsonResponse
+import json
 
 # ABSENT TRACKER
 
@@ -89,13 +106,39 @@ Academic CRM
             f'Notification sending failed: {str(e)}'
         )
 
+
     return redirect('absent_tracker')
+
+def save_admin_notes(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+
+        tracker_id = data.get("tracker_id")
+        notes = data.get("notes")
+
+        tracker = AbsentTracker.objects.get(
+            id=tracker_id
+        )
+
+        tracker.admin_notes = notes
+
+        tracker.save()
+
+        return JsonResponse({
+            "status": "success"
+        })
+
+    return JsonResponse({
+        "status": "error"
+    })
 
 # LOW ATTENDANCE ALERTS
 
 def low_attendance_alerts(request):
 
-    update_absent_tracker()
+    #update_absent_tracker()
 
     low_attendance_students = (
 
@@ -557,7 +600,39 @@ def reports(request):
 
     # BATCH WISE ATTENDANCE DATA
 
+    latest_attendance = (
+        Attendance.objects
+        .order_by('-date')
+        .first()
+    )
+    
+    if latest_attendance:
+        report_date = latest_attendance.date
+    else:
+        report_date = timezone.now().date()
+        
+    
     today = timezone.now().date()
+    
+    today_marked_count = Attendance.objects.filter(
+        date=today
+    ).values(
+        'student'
+    ).distinct().count()
+    
+    pending_count = (
+        total_students - today_marked_count
+    )
+    
+    if today_marked_count ==0:
+        attendance_status = "not_started"
+    elif today_marked_count < total_students:
+        attendance_status = "in_progress"
+        
+    else:
+        attendance_status = "completed"
+        
+   
 
     batch_labels = []
     batch_counts = []
@@ -569,13 +644,13 @@ def reports(request):
 
         present_count = Attendance.objects.filter(
             student__batch=batch_name,
-            date=today,
+            date=report_date,
             status='Present'
         ).count()
 
         absent_count = Attendance.objects.filter(
             student__batch=batch_name,
-            date=today,
+            date=report_date,
             status='Absent'
         ).count()
 
@@ -631,7 +706,7 @@ def reports(request):
             present_count = Attendance.objects.filter(
                 student__course=student.course,
                 student__batch=student.batch,
-                date=today,
+                date=report_date,
                 status='Present'
             ).count()
 
@@ -679,6 +754,14 @@ def reports(request):
         
         'batch_performance_counts': batch_performance_counts,
         
+        'report_date': report_date,
+        
+        'attendance_status': attendance_status,
+        'today_marked_count': today_marked_count,
+        'pending_count': pending_count,
+        
+   
+        
     }
     
     
@@ -688,7 +771,487 @@ def reports(request):
         'student_attendance/reports.html',
         context
     )
+    
+    #Analytics pdf
 
+from datetime import datetime
+
+def analytics_pdf(request):
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = (
+        f'attachment; filename="Analytics_Report_{datetime.now().strftime("%Y%m%d")}.pdf"'
+    )
+
+    doc = SimpleDocTemplate(response)
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    title = Paragraph(
+        "Academic CRM Analytics Report",
+        styles['Title']
+    )
+
+    elements.append(title)
+
+    elements.append(
+        Spacer(1, 12)
+    )
+
+    generated_date = Paragraph(
+        f"Generated On: {datetime.now().strftime('%d-%m-%Y %I:%M %p')}",
+        styles['Normal']
+    )
+
+    elements.append(generated_date)
+
+    elements.append(
+        Spacer(1, 15)
+    )
+
+    total_students = Student.objects.count()
+
+    today = timezone.now().date()
+
+    present_count = Attendance.objects.filter(
+        date=today,
+        status='Present'
+    ).count()
+
+    absent_count = Attendance.objects.filter(
+        date=today,
+        status='Absent'
+    ).count()
+
+    low_attendance = AbsentTracker.objects.filter(
+        total_absences__gte=3
+    ).count()
+
+    data = [
+
+        ["Metric", "Value"],
+
+        ["Total Students", total_students],
+
+        ["Present Students", present_count],
+
+        ["Absent Students", absent_count],
+
+        ["Low Attendance Alerts", low_attendance]
+
+    ]
+
+    table = Table(
+        data,
+        colWidths=[250, 150]
+    )
+
+    table.setStyle(
+        TableStyle([
+
+            ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+
+            ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke)
+
+        ])
+    )
+
+    elements.append(table)
+
+    elements.append(
+        Spacer(1, 20)
+    )
+
+    footer = Paragraph(
+        "Generated by Academic CRM",
+        styles['Italic']
+    )
+
+    elements.append(footer)
+
+    doc.build(elements)
+
+    return response
+
+#Analytics Excel
+
+def analytics_excel(request):
+
+    workbook = Workbook()
+
+    sheet = workbook.active
+
+    sheet.title = "Analytics Report"
+
+    today = timezone.now().date()
+
+    total_students = Student.objects.count()
+
+    present_today = Attendance.objects.filter(
+        date=today,
+        status='Present'
+    ).count()
+
+    absent_today = Attendance.objects.filter(
+        date=today,
+        status='Absent'
+    ).count()
+
+    marked_students = (
+        present_today +
+        absent_today
+    )
+
+    pending_students = (
+        total_students -
+        marked_students
+    )
+
+    low_attendance = AbsentTracker.objects.filter(
+        total_absences__gte=3
+    ).count()
+
+    if marked_students == 0:
+
+        attendance_status = "Not Started"
+
+    elif marked_students < total_students:
+
+        attendance_status = "In Progress"
+
+    else:
+
+        attendance_status = "Completed"
+
+    sheet.append(
+        ["Academic CRM Analytics Report"]
+    )
+
+    sheet.append([])
+
+    sheet.append(
+        ["Generated On", timezone.now().strftime("%d-%m-%Y %I:%M %p")]
+    )
+
+    sheet.append([])
+
+    sheet.append(
+        ["Metric", "Value"]
+    )
+
+    sheet.append(
+        ["Total Students", total_students]
+    )
+
+    sheet.append(
+        ["Marked Students", marked_students]
+    )
+
+    sheet.append(
+        ["Pending Students", pending_students]
+    )
+
+    sheet.append(
+        ["Present Today", present_today]
+    )
+
+    sheet.append(
+        ["Absent Today", absent_today]
+    )
+
+    sheet.append(
+        ["Low Attendance Alerts", low_attendance]
+    )
+
+    sheet.append(
+        ["Attendance Status", attendance_status]
+    )
+
+    response = HttpResponse(
+        content_type=
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = (
+        'attachment; filename="Analytics_Report.xlsx"'
+    )
+
+    workbook.save(response)
+
+    return response
+    
+    #REport  Pdf
+
+def report_pdf(request):
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = (
+        'attachment; filename="Student_Report.pdf"'
+    )
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=landscape(letter)
+    )
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    elements.append(
+
+        Paragraph(
+            "Academic CRM Student Performance Report",
+            styles['Title']
+        )
+
+    )
+
+    elements.append(
+        Spacer(1, 12)
+    )
+
+    data = [
+
+        [
+            "Student",
+            "Course",
+            "Batch",
+            "Present",
+            "Absent",
+            "Late",
+            "Attendance %",
+            "Status"
+        ]
+
+    ]
+
+    trackers = (
+        AbsentTracker.objects
+        .select_related('student')
+        .all()
+        .order_by('-total_absences')
+    )
+
+    total_days = Attendance.objects.values(
+        'date'
+    ).distinct().count()
+
+    for tracker in trackers:
+
+        present_count = Attendance.objects.filter(
+            student=tracker.student,
+            status='Present'
+        ).count()
+
+        absent_count = Attendance.objects.filter(
+            student=tracker.student,
+            status='Absent'
+        ).count()
+
+        late_count = Attendance.objects.filter(
+            student=tracker.student,
+            status='Late'
+        ).count()
+
+        if total_days > 0:
+
+            attendance_rate = round(
+                (present_count / total_days) * 100,
+                1
+            )
+
+        else:
+
+            attendance_rate = 0
+
+        data.append(
+
+            [
+
+                tracker.student.name,
+
+                tracker.student.course,
+
+                tracker.student.batch,
+
+                present_count,
+
+                absent_count,
+
+                late_count,
+
+                f"{attendance_rate}%",
+
+                tracker.alert_level
+
+            ]
+
+        )
+
+    table = Table(data)
+
+    table.setStyle(
+
+        TableStyle([
+
+            (
+                'BACKGROUND',
+                (0, 0),
+                (-1, 0),
+                colors.darkblue
+            ),
+
+            (
+                'TEXTCOLOR',
+                (0, 0),
+                (-1, 0),
+                colors.white
+            ),
+
+            (
+                'GRID',
+                (0, 0),
+                (-1, -1),
+                1,
+                colors.black
+            ),
+
+            (
+                'FONTNAME',
+                (0, 0),
+                (-1, 0),
+                'Helvetica-Bold'
+            )
+
+        ])
+
+    )
+
+    elements.append(table)
+
+    doc.build(elements)
+
+    return response
+
+#Report Excel
+
+def report_excel(request):
+
+    workbook = Workbook()
+
+    sheet = workbook.active
+
+    sheet.title = "Student Report"
+
+    headers = [
+
+        "Student Name",
+        "Student ID",
+        "Course",
+        "Batch",
+        "Present",
+        "Absent",
+        "Late",
+        "Attendance %",
+        "Status"
+
+    ]
+
+    sheet.append(headers)
+
+    trackers = (
+        AbsentTracker.objects
+        .select_related('student')
+        .all()
+        .order_by('-total_absences')
+    )
+
+    total_days = Attendance.objects.values(
+        'date'
+    ).distinct().count()
+
+    for tracker in trackers:
+
+        present_count = Attendance.objects.filter(
+            student=tracker.student,
+            status='Present'
+        ).count()
+
+        absent_count = Attendance.objects.filter(
+            student=tracker.student,
+            status='Absent'
+        ).count()
+
+        late_count = Attendance.objects.filter(
+            student=tracker.student,
+            status='Late'
+        ).count()
+
+        if total_days > 0:
+
+            attendance_rate = round(
+                (present_count / total_days) * 100,
+                1
+            )
+
+        else:
+
+            attendance_rate = 0
+
+        sheet.append([
+
+            tracker.student.name,
+
+            tracker.student.student_id,
+
+            tracker.student.course,
+
+            tracker.student.batch,
+
+            present_count,
+
+            absent_count,
+
+            late_count,
+
+            f"{attendance_rate}%",
+
+            tracker.alert_level
+
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = (
+        'attachment; filename="Student_Report.xlsx"'
+    )
+
+    workbook.save(response)
+
+    return response
     
     #Monthly Report
 

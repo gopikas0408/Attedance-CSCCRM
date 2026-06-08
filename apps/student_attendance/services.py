@@ -58,7 +58,7 @@ def update_absent_tracker():
 
             alert_level = "Critical"
 
-        elif consecutive_absences >= 3:
+        elif consecutive_absences >= 3 or total_absences >= 5:
 
             alert_level = "Medium"
 
@@ -68,16 +68,42 @@ def update_absent_tracker():
 
         notification_status = (
             "SMS Pending"
-            if consecutive_absences >= 3
+            if consecutive_absences >= 3 or total_absences >= 5
             else "Dispatched"
         )
-
-        observation_note = (
-            f"Total Absences: {total_absences} | "
-            f"Consecutive Absences: {consecutive_absences}"
+        
+        student_attendance_count = (
+            attendance_records.count()
         )
+        if student_attendance_count < total_working_days:
+            attendance_status = "Incomplete"
+        else:
+            attendance_status = "Complete"
+            
+
+        #observation notes
+        
+        if consecutive_absences >= 5:
+            observation_note = (
+                "Critical Follow-up"
+            )
+        elif consecutive_absences >= 3:
+            observation_note = (
+            "Monitoring Required"
+            )
+        elif total_absences >= 5:
+            observation_note = (
+            "Frequent Absences"
+            )
+        else:
+            observation_note = (
+            "Normal Attendance"
+            )
+
+            
 
         AbsentTracker.objects.update_or_create(
+            
 
             student=student,
 
@@ -99,7 +125,10 @@ def update_absent_tracker():
                 notification_status,
 
                 "observation_notes":
-                observation_note
+                observation_note,
+                
+                "attendance_status":
+                attendance_status,
 
             }
 

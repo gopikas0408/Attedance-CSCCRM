@@ -184,6 +184,12 @@ class AbsentTracker(models.Model):
 
     )
     
+    attendance_status = models.CharField(
+        max_length=20,
+        default='Complete'
+        
+    )
+    
     admin_notes = models.TextField(
         blank=True,
         null=True

@@ -22,21 +22,15 @@
 
         <div class="topbar-actions">
 
-            <button class="export-btn pdf-btn">
+            <a href="{% url 'analytics_pdf' %}" class="export-btn pdf-btn">
+                <i class="fas fa-file-pdf"></i>
+                Analytics PDF
+            </a>
 
-                <i class="bi bi-file-earmark-pdf-fill"></i>
-
-                Export PDF
-
-            </button>
-
-            <button class="export-btn excel-btn">
-
-                <i class="bi bi-file-earmark-excel-fill"></i>
-
-                Export Excel
-
-            </button>
+            <a href="{% url 'analytics_excel' %}" class="export-btn excel-btn">
+                <i class="fas fa-file-excel"></i>
+                Analytics Excel
+            </a>
 
         </div>
 
@@ -45,7 +39,21 @@
 
         <input type="text" id="studentNameFilter" class="filter-input" placeholder="Student Name">
 
-        <input type="text" id="courseFilter" class="filter-input" placeholder="Course">
+        <select id="courseFilter" class="filter-select">
+
+            <option value="">Course</option>
+
+            <option value="MERN">MERN</option>
+
+            <option value="PYTHON">PYTHON</option>
+
+            <option value="JAVA">JAVA</option>
+
+            <option value="MEAN">MEAN</option>
+
+            <option value="UI/UX">UI/UX</option>
+
+        </select>
         <select id="batchFilter" class="filter-input">
 
             <option value="">Batch</option>
@@ -86,6 +94,10 @@
 
             Clear
 
+        </button>
+
+        <button id="showAllBtn" class="clear-btn">
+            Search All
         </button>
 
     </div>
@@ -149,190 +161,231 @@
         </div>
 
     </div>
-    <div class="chart-card mb-4">
+    {% if attendance_status == "not_started" %}
 
-        <div class="chart-header">
+    <div class="alert alert-danger">
 
-            <h4>
-
-                Batch Performance Comparison
-
-            </h4>
-
-        </div>
-
-        <div style="height:350px;">
-
-            <canvas id="batchPerformanceChart"></canvas>
-
-        </div>
+        Today's attendance has not been started yet.
 
     </div>
 
+    {% elif attendance_status == "in_progress" %}
 
-    <!-- REPORT TABLE -->
+    <div class="alert alert-warning">
 
-    <div class="report-table-card">
+        Today's attendance is in progress.
 
-        <div class="report-table-header">
+        {{ today_marked_count }} of
+        {{ total_students }}
+        students have been marked.
 
-            <h4>
+        {{ pending_count }}
+        students are pending.
 
-                Student Performance Report
+    </div>
 
-            </h4>
+    {% else %}
 
-            <div class="table-actions">
+    <div class="alert alert-success">
 
-                <button class="export-btn pdf-btn">
+        Today's attendance has been completed successfully.
 
-                    <i class="bi bi-file-earmark-pdf-fill"></i>
+        Attendance records updated for all
+        {{ total_students }}
+        students.
 
-                    Export PDF
+    </div>
 
-                </button>
+    {% endif %}
 
-                <button class="export-btn excel-btn">
 
-                    <i class="bi bi-file-earmark-excel-fill"></i>
+    <! --Batch Attendance chart-->
 
-                    Export Excel
+        <div class="chart-card mb-4">
 
-                </button>
+            <div class="chart-header">
+
+                <h4>
+
+                    Batch Performance Comparison
+
+                </h4>
+
+            </div>
+
+            <div style="height:350px;">
+
+                <canvas id="batchPerformanceChart"></canvas>
+
             </div>
 
         </div>
 
 
-        <div class="table-responsive">
-
-            <table class="table align-middle">
-
-                <thead>
-
-                    <tr>
 
 
-                        <th>STUDENT</th>
-                        <th>COURSE</th>
-                        <th>BATCH</th>
-                        <th>PRESENT</th>
-                        <th>ABSENT</th>
-                        <th>LATE</th>
-                        <th>TOTAL DAYS</th>
-                        <th>ATTENDANCE RATE</th>
-                        <th>STATUS</th>
+        <div id="resultsCount" class="results-count">
+            Showing {{ report_students|length }} of {{ report_students|length }} Students
+        </div>
 
-                    </tr>
+        <!-- REPORT TABLE -->
 
-                </thead>
+        <div class="report-table-card">
 
-                <tbody>
+            <div class="report-table-header">
 
-                    {% for student in report_students %}
+                <h4>
 
-                    <tr class="report-row" data-name="{{ student.student.name|lower }}"
-                        data-course="{{ student.student.batch_id|lower }}"
-                        data-batch="{{ student.student.batch|lower }}" data-attendance="{{ student.attendance_rate }}"
-                        data-status="{% if student.total_absences >= 5 %}critical{% elif student.total_absences >= 3 %}warning{% else %}good{% endif %}">
+                    Student Performance Report
 
-                        <td>
+                </h4>
 
-                            <div class="student-cell">
+                <div class="table-actions">
 
-                                <div class="student-avatar">
+                    <a href="{% url 'report_pdf' %}" class="export-btn pdf-btn">
+                        <i class="fas fa-file-pdf"></i>
+                        Report PDF
+                    </a>
 
-                                    {{ student.student.name|slice:":2"|upper }}
+                    <a href="{% url 'report_excel' %}" class="export-btn excel-btn">
+                        <i class="fas fa-file-excel"></i>
+                        Report Excel
+                    </a>
+                </div>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+
+                            <th>STUDENT</th>
+                            <th>COURSE</th>
+                            <th>BATCH</th>
+                            <th>PRESENT</th>
+                            <th>ABSENT</th>
+                            <th>LATE</th>
+                            <th>TOTAL DAYS</th>
+                            <th>ATTENDANCE RATE</th>
+                            <th>STATUS</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for student in report_students %}
+
+                        <tr class="report-row" data-name="{{ student.student.name|lower }}"
+                            data-course="{{ student.student.course|lower }}"
+                            data-batch="{{ student.student.batch|lower }}"
+                            data-attendance="{{ student.attendance_rate }}"
+                            data-status="{% if student.total_absences >= 5 %}critical{% elif student.total_absences >= 3 %}warning{% else %}good{% endif %}">
+
+                            <td>
+
+                                <div class="student-cell">
+
+                                    <div class="student-avatar">
+
+                                        {{ student.student.name|slice:":2"|upper }}
+
+                                    </div>
+
+                                    <span>
+
+                                        {{ student.student.name }}
+
+                                    </span>
 
                                 </div>
 
-                                <span>
+                            </td>
 
-                                    {{ student.student.name }}
+                            <td>
+
+                                {{ student.student.course }}
+
+                            </td>
+                            <td>
+
+                                {{ student.student.batch }}
+
+                            </td>
+
+                            <td class="present-text">
+                                {{ student.present_count }}
+                            </td>
+                            <td class="absent-text">
+                                {{ student.absent_count }}
+                            </td>
+
+                            <td class="late-text">
+
+                                {{ student.late_count }}
+
+                            </td>
+
+                            <td>
+
+                                {{ student.total_days }}
+
+                            </td>
+
+                            <td class="rate-text">
+
+                                {{ student.attendance_rate }}%
+
+                            </td>
+
+                            <td>
+
+                                {% if student.total_absences >= 5 %}
+
+                                <span class="status-badge critical-badge">
+
+                                    Critical
 
                                 </span>
 
-                            </div>
+                                {% elif student.total_absences >= 3 %}
 
-                        </td>
+                                <span class="status-badge warning-badge">
 
-                        <td>
+                                    Warning
 
-                            {{ student.student.course }}
+                                </span>
 
-                        </td>
-                        <td>
+                                {% else %}
 
-                            {{ student.student.batch }}
+                                <span class="status-badge good-badge">
 
-                        </td>
+                                    Good
 
-                        <td class="present-text">
-                            {{ student.present_count }}
-                        </td>
-                        <td class="absent-text">
-                            {{ student.absent_count }}
-                        </td>
+                                </span>
 
-                        <td class="late-text">
+                                {% endif %}
 
-                            {{ student.late_count }}
+                            </td>
 
-                        </td>
+                        </tr>
 
-                        <td>
+                        {% endfor %}
 
-                            {{ student.total_days }}
+                    </tbody>
 
-                        </td>
+                </table>
 
-                        <td class="rate-text">
-
-                            {{ student.attendance_rate }}%
-
-                        </td>
-
-                        <td>
-
-                            {% if student.total_absences >= 5 %}
-
-                            <span class="status-badge critical-badge">
-
-                                Critical
-
-                            </span>
-
-                            {% elif student.total_absences >= 3 %}
-
-                            <span class="status-badge warning-badge">
-
-                                Warning
-
-                            </span>
-
-                            {% else %}
-
-                            <span class="status-badge good-badge">
-
-                                Good
-
-                            </span>
-
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            </div>
 
         </div>
-
-    </div>
 
 </div>
 
@@ -617,6 +670,13 @@
 
     function applyFilters() {
 
+        let visibleCount = 0;
+
+        const totalCount =
+            document.querySelectorAll(
+                ".report-row"
+            ).length;
+
         const name =
             document.getElementById(
                 "studentNameFilter"
@@ -632,9 +692,6 @@
                 "batchFilter"
             ).value.toLowerCase().trim();
 
-        const batchMatch =
-            batch === "" ||
-            card.dataset.batch === batch;
 
         const status =
             document.getElementById(
@@ -689,8 +746,10 @@
                 (batch === "" ||
                     row.dataset.batch === batch)
 
-                    (status === "" ||
-                        studentStatus === status)
+                &&
+
+                (status === "" ||
+                    studentStatus === status)
 
                 &&
 
@@ -699,7 +758,15 @@
             row.style.display =
                 show ? "" : "none";
 
+            if (show) {
+
+                visibleCount++;
+
+            }
+
         });
+
+        document.getElementById("resultsCount").textContent = `Showing ${visibleCount} of ${totalCount} Students`;
 
     }
 
@@ -736,6 +803,33 @@
             document.getElementById(
                 "statusFilter"
             ).value = "";
+
+            applyFilters();
+
+        }
+    );
+    /* Select all btn */
+    document.getElementById(
+        "showAllBtn"
+    ).addEventListener(
+        "click",
+        function () {
+
+            document.querySelectorAll(
+                ".filter-input"
+            ).forEach(input => {
+
+                input.value = "";
+
+            });
+
+            document.querySelectorAll(
+                ".filter-select"
+            ).forEach(select => {
+
+                select.value = "";
+
+            });
 
             applyFilters();
 

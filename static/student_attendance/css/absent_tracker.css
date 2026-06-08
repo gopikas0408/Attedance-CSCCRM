@@ -167,11 +167,11 @@
 
     border-radius:999px;
 
-    font-size:11px;
+    font-size:10px;
 
     font-weight:700;
 
-    color:#fff;
+    color:var(--white);
 
 }
 
@@ -235,19 +235,19 @@
 }
 .attendance-table thead th{
 
-    font-size:12px;
+    font-size:11px;
 
     font-weight:700;
 
-    padding:12px 10px;
+    padding:10px 6px;
 
 }
 
 .attendance-table tbody td{
 
-    font-size:12px;
+    font-size:11px;
 
-    padding:14px 10px;
+    padding:10px 6px;
 
     vertical-align:middle;
 
@@ -282,7 +282,7 @@
 
 .student-info h6{
 
-    font-size:13px;
+    font-size:12px;
 
     margin-bottom:2px;
 
@@ -292,7 +292,7 @@
 
 .student-info small{
 
-    font-size:11px;
+    font-size:10px;
 
     color:var(--muted);
 
@@ -306,7 +306,7 @@
 
     justify-content:center;
 
-    min-width:90px;
+    min-width:70px;
 
     height:30px;
 
@@ -314,11 +314,11 @@
 
     border-radius:8px;
 
-    background:#6b7280;
+    background:var(--muted);
 
-    color:#fff;
+    color: var(--white);
 
-    font-size:11px;
+    font-size:10px;
 
     font-weight:600;
 
@@ -332,7 +332,7 @@
 
     background:var(--danger);
 
-    color:white;
+    color:var(--white);
 
     padding:7px 12px;
 
@@ -347,31 +347,30 @@
 .observation-box{
 
     display:flex;
-
+    align-items:center;
+    gap:5px;
 }
 
 .observation-input{
 
+    width:120px;
     height:36px;
-
-    font-size:12px;
-
+    font-size:11px;
 }
 
 .save-btn{
 
-    width:40px;
-
+    width:36px;
     height:36px;
-
+    flex-shrink:0;
 }
 /*status badges*/
 .status-badge{
 
-    min-width: 120px;
-    height: 38px;
+    min-width: 90px;
+    height: 34px;
 
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
@@ -379,7 +378,7 @@
 
     border-radius: 8px;
 
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 600;
 
 }
@@ -408,7 +407,7 @@
 
     background:var(--success);
 
-    color:white;
+    color:var(--white);
 
 }
 /*button styles*/
@@ -416,7 +415,7 @@
 
     background:var(--primary);
 
-    color:white;
+    color:var(--white);
 
     border:none;
 
@@ -437,7 +436,7 @@
 
 .renotify-btn{
 
-    background:white;
+    background:var(--light);
 
     color:var(--muted);
 
@@ -463,7 +462,7 @@
 
     background:var(--primary);
 
-    color:white;
+    color:var(--white);
 
     font-size:12px;
 
@@ -482,13 +481,25 @@
 /*admin notes*/
 .admin-notes input{
 
-    width:170px;
+    width:120px;
 
     height:34px;
 
-    font-size:12px;
+    font-size:11px;
 
     border-radius:8px;
+
+}
+
+.results-count {
+
+    margin-top: 10px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: var(--muted);
 
 }
 
@@ -591,15 +602,15 @@ body{
 
     bottom:20px;
 
-    background:#16a34a;
+    background:var(--success);
 
-    color:#fff;
+    color:var(--border);
 
     padding:14px 20px;
 
     border-radius:10px;
 
-    font-size:13px;
+    font-size:12px;
 
     font-weight:600;
 
@@ -608,5 +619,134 @@ body{
     display:none;
 
     z-index:9999;
+
+}
+
+.attendance-table{
+
+    width:100%;
+    border-collapse:collapse;
+}
+.attendance-table th{
+
+    white-space:normal;
+    line-height:1.4;
+    text-align:center;
+}
+
+.attendance-table td{
+
+    text-align:center;
+    vertical-align:middle;
+}
+
+.obs-badge{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:140px;
+    height:36px;
+
+    padding:0 12px;
+
+    border-radius:8px;
+
+    font-size:11px;
+    font-weight:600;
+}
+
+.stable{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.followup{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.parent-pending{
+    background:#fed7aa;
+    color:#c2410c;
+}
+
+.critical-risk{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.admin-notes-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:8px;
+
+}
+
+.admin-btn{
+
+    width:36px;
+
+    height:36px;
+
+    border:none;
+
+    border-radius:8px;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+.edit-btn{
+
+    background:#262170;
+
+}
+
+.view-btn{
+
+    background:#16a34a;
+
+}
+
+.custom-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.4);
+    z-index:9999;
+}
+.custom-modal-content{
+    width:500px;
+    max-width:90%;
+    margin:100px auto;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.modal-header span{
+
+    cursor:pointer;
+
+    font-size:24px;
+
+    font-weight:bold;
 
 }

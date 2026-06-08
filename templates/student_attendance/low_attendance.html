@@ -37,6 +37,12 @@
 
         </button>
 
+        <button id="showAllBtn" class="clear-btn">
+
+            Search All
+
+        </button>
+
     </div>
 
     <!-- ALERT SECTION -->
@@ -73,9 +79,8 @@
 
                 {% for student in low_attendance_students %}
 
-                {% if student.total_absences >= 5 %}
-
-                <div class="student-warning-card critical-warning-card low-card"
+                {% if student.attendance_percentage < 60 %} <div
+                    class="student-warning-card critical-warning-card low-card"
                     data-name="{{ student.student.name|lower }}" data-course="{{ student.student.course|lower }}"
                     data-batch="{{ student.student.batch|lower }}"
                     data-percentage="{{ student.attendance_percentage }}">
@@ -126,117 +131,6 @@
 
                     </div>
 
-                </div>
-
-                {% endif %}
-
-                {% empty %}
-
-                <div class="text-center py-4">
-
-                    <p>No Critical Alerts Found</p>
-
-                </div>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-        <!-- WARNING ALERTS -->
-
-        <div class="col-lg-6">
-
-            <div class="attendance-card warning-card">
-
-                <div class="attendance-card-header">
-
-                    <div class="header-left warning-text">
-
-                        <i class="bi bi-exclamation-circle-fill"></i>
-
-                        <span>
-
-                            Warning Alerts
-
-                        </span>
-
-                    </div>
-
-                    <div class="header-right warning-percent-label">
-
-                        60% - 75%
-
-                    </div>
-
-                </div>
-
-                {% for student in low_attendance_students %}
-
-                {% if student.total_absences < 5 %} <div class="student-warning-card warning-warning-card low-card"
-                    data-name="{{ student.student.name|lower }}" data-course="{{ student.student.course|lower }}"
-                    data-batch="{{ student.student.batch|lower }}"
-                    data-percentage="{{ student.attendance_percentage }}">
-                    <div class="student-left-section">
-
-                        <div class="warning-icon warning-icon-bg">
-
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h5>
-
-                                {{ student.student.name }}
-
-                            </h5>
-
-                            <p>
-
-                                {{ student.student.course }}
-                                ·
-                                {{ student.student.batch }}
-                                · Total Absences:
-                                {{ student.total_absences }}
-
-                                
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <div class="student-right-section">
-
-                        <h3 class="warning-score">
-
-                            {{ student.attendance_percentage }}%
-
-                        </h3>
-
-                        <div class="action-buttons">
-
-                            <a href="{% url 'send_sms_notification' student.id %}" class="mail-btn warning-mail-btn">
-
-                                <i class="bi bi-chat-left-text-fill"></i>
-
-                            </a>
-
-                            <a href="{% url 'send_low_attendance_notification' student.id %}"
-                                class="mail-btn warning-mail-btn">
-
-                                <i class="bi bi-envelope-fill"></i>
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
             </div>
 
             {% endif %}
@@ -245,7 +139,7 @@
 
             <div class="text-center py-4">
 
-                <p>No Warning Alerts Found</p>
+                <p>No Critical Alerts Found</p>
 
             </div>
 
@@ -254,6 +148,117 @@
         </div>
 
     </div>
+
+    <!-- WARNING ALERTS -->
+
+    <div class="col-lg-6">
+
+        <div class="attendance-card warning-card">
+
+            <div class="attendance-card-header">
+
+                <div class="header-left warning-text">
+
+                    <i class="bi bi-exclamation-circle-fill"></i>
+
+                    <span>
+
+                        Warning Alerts
+
+                    </span>
+
+                </div>
+
+                <div class="header-right warning-percent-label">
+
+                    60% - 75%
+
+                </div>
+
+            </div>
+
+            {% for student in low_attendance_students %}
+
+            {% if student.attendance_percentage >= 60 and student.attendance_percentage <= 75 %} <div
+                class="student-warning-card warning-warning-card low-card" data-name="{{ student.student.name|lower }}"
+                data-course="{{ student.student.course|lower }}" data-batch="{{ student.student.batch|lower }}"
+                data-percentage="{{ student.attendance_percentage }}">
+                <div class="student-left-section">
+
+                    <div class="warning-icon warning-icon-bg">
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h5>
+
+                            {{ student.student.name }}
+
+                        </h5>
+
+                        <p>
+
+                            {{ student.student.course }}
+                            ·
+                            {{ student.student.batch }}
+                            · Total Absences:
+                            {{ student.total_absences }}
+
+
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="student-right-section">
+
+                    <h3 class="warning-score">
+
+                        {{ student.attendance_percentage }}%
+
+                    </h3>
+
+                    <div class="action-buttons">
+
+                        <a href="{% url 'send_sms_notification' student.id %}" class="mail-btn warning-mail-btn">
+
+                            <i class="bi bi-chat-left-text-fill"></i>
+
+                        </a>
+
+                        <a href="{% url 'send_low_attendance_notification' student.id %}"
+                            class="mail-btn warning-mail-btn">
+
+                            <i class="bi bi-envelope-fill"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+        </div>
+
+        {% endif %}
+
+        {% empty %}
+
+        <div class="text-center py-4">
+
+            <p>No Warning Alerts Found</p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
 </div>
 <div id="successMessage" class="alert alert-success d-none mb-3">
@@ -320,6 +325,8 @@
 
 
 <script>
+
+
 
     function sendEmailAll() {
 
@@ -549,6 +556,34 @@
         });
 
     }
+
+    /* Select all btn */
+    document.getElementById(
+        "showAllBtn"
+    ).addEventListener(
+        "click",
+        function () {
+
+            document.querySelectorAll(
+                ".filter-input"
+            ).forEach(input => {
+
+                input.value = "";
+
+            });
+
+            document.querySelectorAll(
+                ".filter-select"
+            ).forEach(select => {
+
+                select.value = "";
+
+            });
+
+            applyFilters();
+
+        }
+    );
 
     /* EVENTS */
 
